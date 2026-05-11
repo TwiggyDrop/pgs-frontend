@@ -1,0 +1,65 @@
+<div class="page-header">
+  <h1>Supervised Internships</h1>
+</div>
+
+@if (loading) {
+  <div class="spinner-container"><mat-spinner /></div>
+} @else if (error) {
+  <div class="error-banner">{{ error }}</div>
+} @else if (internships.length === 0) {
+  <div class="empty-state">
+    <mat-icon>supervisor_account</mat-icon>
+    <p>No internships assigned to you yet</p>
+  </div>
+} @else {
+  <div class="internships-list">
+    @for (i of internships; track i.id) {
+      <mat-card appearance="outlined">
+        <mat-card-header>
+          <mat-card-title>{{ i.studentName }}</mat-card-title>
+          <mat-card-subtitle>{{ i.offerTitle }} @ {{ i.companyName }}</mat-card-subtitle>
+          <div class="status-badge">
+            <span [class]="'status-chip ' + i.status">{{ i.status }}</span>
+          </div>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="info-row">
+            <span><mat-icon>email</mat-icon> {{ i.studentEmail }}</span>
+            @if (i.startDate) {
+              <span><mat-icon>event</mat-icon> {{ i.startDate | date:'mediumDate' }}
+                @if (i.endDate) { – {{ i.endDate | date:'mediumDate' }} }
+              </span>
+            }
+          </div>
+
+          <mat-divider />
+
+          @if (i.status === 'ONGOING') {
+            <div class="status-controls">
+              <button mat-stroked-button color="primary" (click)="updateStatus(i, 'COMPLETED')"
+                      [disabled]="updatingStatus[i.id]">
+                <mat-icon>check_circle</mat-icon> Mark Completed
+              </button>
+              <button mat-stroked-button color="warn" (click)="updateStatus(i, 'INTERRUPTED')"
+                      [disabled]="updatingStatus[i.id]">
+                <mat-icon>cancel</mat-icon> Mark Interrupted
+              </button>
+            </div>
+          }
+
+          <div class="notes-section">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Supervisor Notes</mat-label>
+              <textarea matInput [(ngModel)]="editingNotes[i.id]" rows="4"
+                        placeholder="Add notes about this internship..."></textarea>
+            </mat-form-field>
+            <button mat-flat-button (click)="saveNotes(i)" [disabled]="savingNotes[i.id]">
+              @if (savingNotes[i.id]) { <mat-spinner diameter="18" /> } @else { Save Notes }
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    }
+  </div>
+}

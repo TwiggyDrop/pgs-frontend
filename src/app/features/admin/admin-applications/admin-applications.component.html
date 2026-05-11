@@ -1,0 +1,88 @@
+<div class="page-header">
+  <h1>All Applications</h1>
+  <span class="count">{{ applications.length }} total</span>
+</div>
+
+@if (loading) {
+  <div class="spinner-container"><mat-spinner /></div>
+} @else if (error) {
+  <div class="error-banner">{{ error }}</div>
+} @else if (applications.length === 0) {
+  <div class="empty-state">
+    <mat-icon>description</mat-icon>
+    <p>No applications yet</p>
+  </div>
+} @else {
+  <mat-accordion multi>
+    @for (app of applications; track app.id) {
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>{{ app.studentName }}</mat-panel-title>
+          <mat-panel-description>
+            {{ app.offerTitle }} @ {{ app.companyName }}
+            &nbsp;&nbsp;
+            <span [class]="'status-chip ' + app.status">{{ app.status }}</span>
+            &nbsp;&nbsp;
+            {{ app.appliedAt | date:'mediumDate' }}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <div class="app-detail">
+          <div class="meta">
+            <span><strong>Student:</strong> {{ app.studentEmail }}</span>
+          </div>
+
+          @if (app.coverLetter) {
+            <div class="section">
+              <strong>Cover Letter</strong>
+              <p class="cover-letter">{{ app.coverLetter }}</p>
+            </div>
+          }
+
+          @if (app.status === 'PENDING') {
+            <div class="section">
+              <strong>Notes (optional)</strong>
+              <textarea [(ngModel)]="notes[app.id]" rows="2"
+                        placeholder="Add notes..." class="notes-input"></textarea>
+              <div class="action-row">
+                <button mat-flat-button color="primary" (click)="updateStatus(app, 'ACCEPTED')"
+                        [disabled]="updatingStatus[app.id]">
+                  <mat-icon>check</mat-icon> Accept
+                </button>
+                <button mat-stroked-button color="warn" (click)="updateStatus(app, 'REJECTED')"
+                        [disabled]="updatingStatus[app.id]">
+                  <mat-icon>close</mat-icon> Reject
+                </button>
+              </div>
+            </div>
+          }
+
+          @if (app.status === 'ACCEPTED') {
+            <div class="section create-internship">
+              <strong>Create Internship</strong>
+              <div class="internship-row">
+                <select [(ngModel)]="selectedSupervisor[app.id]" class="supervisor-select">
+                  <option [ngValue]="null">No supervisor</option>
+                  @for (s of supervisors; track s.id) {
+                    <option [ngValue]="s.id">{{ s.firstName }} {{ s.lastName }}</option>
+                  }
+                </select>
+                <button mat-flat-button (click)="createInternship(app)"
+                        [disabled]="creatingInternship[app.id]">
+                  @if (creatingInternship[app.id]) { <mat-spinner diameter="18" /> }
+                  @else { Create Internship }
+                </button>
+              </div>
+            </div>
+          }
+
+          @if (app.adminNotes) {
+            <div class="admin-notes">
+              <strong>Notes:</strong> {{ app.adminNotes }}
+            </div>
+          }
+        </div>
+      </mat-expansion-panel>
+    }
+  </mat-accordion>
+}

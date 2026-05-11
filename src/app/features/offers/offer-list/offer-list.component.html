@@ -1,0 +1,73 @@
+<div class="page-header">
+  <h1>Internship Offers</h1>
+  <mat-form-field appearance="outline" class="search-field">
+    <mat-label>Search offers</mat-label>
+    <input matInput [(ngModel)]="searchQuery" (input)="filter()" placeholder="Title, company, domain..." />
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
+</div>
+
+@if (loading) {
+  <div class="skeleton-grid">
+    @for (_ of skeletonCards; track $index) {
+      <div class="skeleton-card">
+        <div class="skeleton-line wide"></div>
+        <div class="skeleton-line medium"></div>
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line short"></div>
+      </div>
+    }
+  </div>
+} @else if (error) {
+  <div class="error-banner">{{ error }}</div>
+} @else if (filtered.length === 0) {
+  <div class="empty-state">
+    <mat-icon>work_off</mat-icon>
+    <p>No offers found</p>
+  </div>
+} @else {
+  <div class="count-label">{{ filtered.length }} offer{{ filtered.length !== 1 ? 's' : '' }} available</div>
+  <div class="offers-grid">
+    @for (offer of filtered; track offer.id) {
+      <mat-card class="offer-card" appearance="outlined">
+        <mat-card-header>
+          <mat-card-title>{{ offer.title }}</mat-card-title>
+          <mat-card-subtitle>
+            <mat-icon inline>business</mat-icon> {{ offer.companyName }}
+          </mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+          <mat-chip-set aria-label="Offer details">
+            @if (offer.domain) {
+              <mat-chip>{{ offer.domain }}</mat-chip>
+            }
+            @if (offer.location) {
+              <mat-chip>
+                <mat-icon matChipAvatar>location_on</mat-icon>
+                {{ offer.location }}
+              </mat-chip>
+            }
+            @if (offer.durationMonths) {
+              <mat-chip>{{ offer.durationMonths }} months</mat-chip>
+            }
+          </mat-chip-set>
+
+          <p class="description">{{ offer.description | slice:0:180 }}{{ offer.description.length > 180 ? '...' : '' }}</p>
+
+          <div class="dates">
+            <mat-icon>event</mat-icon>
+            {{ offer.startDate | date:'mediumDate' }} – {{ offer.endDate | date:'mediumDate' }}
+          </div>
+        </mat-card-content>
+
+        <mat-card-actions>
+          <button mat-button color="primary" [routerLink]="['/offers', offer.id]">
+            View Details <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    }
+  </div>
+}

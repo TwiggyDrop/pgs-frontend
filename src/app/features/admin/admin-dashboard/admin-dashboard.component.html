@@ -1,0 +1,79 @@
+<div class="page-header">
+  <div>
+    <p class="eyebrow">Overview</p>
+    <h1>Admin Dashboard</h1>
+  </div>
+</div>
+
+@if (loading) {
+  <div class="spinner-container"><mat-spinner /></div>
+} @else if (error) {
+  <div class="error-banner">{{ error }}</div>
+} @else if (stats) {
+  <div class="stats-grid">
+    <mat-card class="stat-card users">
+      <mat-card-content>
+        <div class="stat-top">
+          <div>
+            <div class="stat-label">Total Users</div>
+            <div class="stat-value">{{ stats.totalUsers }}</div>
+          </div>
+          <div class="icon-badge"><mat-icon>groups</mat-icon></div>
+        </div>
+        <div class="breakdown">
+          <span>{{ stats.totalStudents }} students</span>
+          <span>{{ stats.totalCompanies }} companies</span>
+          <span>{{ stats.totalSupervisors }} supervisors</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card offers">
+      <mat-card-content>
+        <div class="stat-top">
+          <div>
+            <div class="stat-label">Total Offers</div>
+            <div class="stat-value">{{ stats.totalOffers }}</div>
+          </div>
+          <div class="icon-badge"><mat-icon>work</mat-icon></div>
+        </div>
+        <div class="breakdown">
+          <span>{{ stats.activeOffers }} active</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card applications">
+      <mat-card-content>
+        <div class="stat-top">
+          <div>
+            <div class="stat-label">Applications</div>
+            <div class="stat-value">{{ stats.totalApplications }}</div>
+          </div>
+          <div class="icon-badge"><mat-icon>assignment</mat-icon></div>
+        </div>
+        <div class="breakdown">
+          <span class="pending">{{ stats.pendingApplications }} pending</span>
+          <span class="accepted">{{ stats.acceptedApplications }} accepted</span>
+          <span class="rejected">{{ stats.rejectedApplications }} rejected</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card internships">
+      <mat-card-content>
+        <div class="stat-top">
+          <div>
+            <div class="stat-label">Internships</div>
+            <div class="stat-value">{{ stats.totalInternships }}</div>
+          </div>
+          <div class="icon-badge"><mat-icon>business_center</mat-icon></div>
+        </div>
+        <div class="breakdown">
+          <span class="ongoing">{{ stats.ongoingInternships }} ongoing</span>
+          <span class="completed">{{ stats.completedInternships }} completed</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+}

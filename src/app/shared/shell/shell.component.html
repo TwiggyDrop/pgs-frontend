@@ -1,0 +1,90 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav class="sidenav" mode="side" opened>
+    <div class="logo-area">
+      <mat-icon class="logo-icon">school</mat-icon>
+      <span class="logo-text">PGS Platform</span>
+    </div>
+
+    <mat-divider />
+
+    <mat-nav-list>
+      <a mat-list-item routerLink="/offers" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: false}">
+        <mat-icon matListItemIcon>work_outline</mat-icon>
+        <span matListItemTitle>Browse Offers</span>
+      </a>
+
+      @if (isStudent) {
+        <a mat-list-item routerLink="/student/applications" routerLinkActive="active-link">
+          <mat-icon matListItemIcon>assignment</mat-icon>
+          <span matListItemTitle>My Applications</span>
+        </a>
+        <a mat-list-item routerLink="/student/internships" routerLinkActive="active-link">
+          <mat-icon matListItemIcon>business_center</mat-icon>
+          <span matListItemTitle>My Internships</span>
+        </a>
+      }
+
+      @if (isCompany) {
+        <a mat-list-item routerLink="/company/offers" routerLinkActive="active-link">
+          <mat-icon matListItemIcon>add_business</mat-icon>
+          <span matListItemTitle>My Offers</span>
+        </a>
+      }
+
+      @if (isSupervisor) {
+        <a mat-list-item routerLink="/supervisor/internships" routerLinkActive="active-link">
+          <mat-icon matListItemIcon>supervisor_account</mat-icon>
+          <span matListItemTitle>Supervised Internships</span>
+        </a>
+      }
+
+      @if (isAdmin) {
+        <a mat-list-item routerLink="/admin/dashboard" routerLinkActive="active-link">
+          <mat-icon matListItemIcon>dashboard</mat-icon>
+          <span matListItemTitle>Dashboard</span>
+        </a>
+        <a mat-list-item routerLink="/admin/users" routerLinkActive="active-link">
+          <mat-icon matListItemIcon>people</mat-icon>
+          <span matListItemTitle>Users</span>
+        </a>
+        <a mat-list-item routerLink="/admin/applications" routerLinkActive="active-link">
+          <mat-icon matListItemIcon>description</mat-icon>
+          <span matListItemTitle>Applications</span>
+        </a>
+        <a mat-list-item routerLink="/admin/internships" routerLinkActive="active-link">
+          <mat-icon matListItemIcon>business_center</mat-icon>
+          <span matListItemTitle>Internships</span>
+        </a>
+      }
+    </mat-nav-list>
+
+    <div class="sidenav-footer">
+      <mat-divider />
+      @if (isLoggedIn) {
+        <div class="user-info">
+          <mat-icon>account_circle</mat-icon>
+          <div class="user-details">
+            <div class="user-name">{{ user?.firstName }} {{ user?.lastName }}</div>
+            <div class="user-role">{{ user?.role }}</div>
+          </div>
+        </div>
+        <button mat-button class="logout-btn" (click)="logout()">
+          <mat-icon>logout</mat-icon> Logout
+        </button>
+      } @else {
+        <a mat-button routerLink="/login" class="auth-btn">
+          <mat-icon>login</mat-icon> Login
+        </a>
+        <a mat-button routerLink="/register" class="auth-btn">
+          <mat-icon>person_add</mat-icon> Register
+        </a>
+      }
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <div class="content-area">
+      <router-outlet />
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

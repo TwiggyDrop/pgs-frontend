@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\ahorri\\\\IdeaProjects\\\\pgs-backend\" -Force)",
+      "Bash(Select-Object Name, PSIsContainer)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\ahorri\\\\IdeaProjects\\\\pgs-frontend\" -Force)",
+      "Bash(Select-Object Name, FullName)",
+      "Bash(npm install *)",
+      "Bash(npx ng *)"
+    ]
+  }
+}

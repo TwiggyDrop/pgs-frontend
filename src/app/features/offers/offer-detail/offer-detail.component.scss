@@ -1,0 +1,83 @@
+.back-btn {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.detail-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 24px;
+  align-items: start;
+}
+
+.offer-title { font-size: 1.5rem; margin-bottom: 4px; }
+
+mat-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 12px;
+}
+
+mat-card-subtitle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+
+  .info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+
+    mat-icon { color: rgba(0,0,0,0.4); margin-top: 2px; }
+
+    .label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: rgba(0,0,0,0.5);
+      margin-bottom: 2px;
+    }
+  }
+}
+
+.description {
+  white-space: pre-wrap;
+  line-height: 1.6;
+  color: rgba(0,0,0,0.75);
+}
+
+h3 { margin: 0; font-size: 1rem; font-weight: 600; }
+
+.applied-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #2e7d32;
+  font-weight: 500;
+  padding: 8px 0;
+
+  mat-icon { color: #2e7d32; }
+}
+
+.closed-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(0,0,0,0.5);
+  mat-icon { color: rgba(0,0,0,0.35); }
+}
+
+@media (max-width: 768px) {
+  .detail-layout {
+    grid-template-columns: 1fr;
+  }
+}

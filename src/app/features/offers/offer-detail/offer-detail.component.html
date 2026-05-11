@@ -1,0 +1,109 @@
+<button mat-button routerLink="/offers" class="back-btn">
+  <mat-icon>arrow_back</mat-icon> Back to Offers
+</button>
+
+@if (loading) {
+  <div class="spinner-container"><mat-spinner /></div>
+} @else if (error) {
+  <div class="error-banner">{{ error }}</div>
+} @else if (offer) {
+  <div class="detail-layout">
+    <div class="main-content">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title class="offer-title">{{ offer.title }}</mat-card-title>
+          <mat-card-subtitle>
+            <mat-icon inline>business</mat-icon> {{ offer.companyName }}
+          </mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+          <mat-chip-set>
+            <mat-chip [class]="'status-chip ' + offer.status">{{ offer.status }}</mat-chip>
+            @if (offer.domain) { <mat-chip>{{ offer.domain }}</mat-chip> }
+            @if (offer.location) {
+              <mat-chip><mat-icon matChipAvatar>location_on</mat-icon>{{ offer.location }}</mat-chip>
+            }
+            @if (offer.durationMonths) {
+              <mat-chip>{{ offer.durationMonths }} months</mat-chip>
+            }
+          </mat-chip-set>
+
+          <mat-divider />
+
+          <div class="info-grid">
+            <div class="info-item">
+              <mat-icon>event</mat-icon>
+              <div>
+                <div class="label">Start Date</div>
+                <div>{{ offer.startDate | date:'longDate' }}</div>
+              </div>
+            </div>
+            <div class="info-item">
+              <mat-icon>event_busy</mat-icon>
+              <div>
+                <div class="label">End Date</div>
+                <div>{{ offer.endDate | date:'longDate' }}</div>
+              </div>
+            </div>
+          </div>
+
+          <h3>Description</h3>
+          <p class="description">{{ offer.description }}</p>
+
+          @if (offer.requiredSkills) {
+            <h3>Required Skills</h3>
+            <p>{{ offer.requiredSkills }}</p>
+          }
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div class="sidebar">
+      @if (offer.status === 'ACTIVE') {
+        @if (!isLoggedIn) {
+          <mat-card>
+            <mat-card-content>
+              <p>You need to be logged in as a student to apply.</p>
+              <a mat-flat-button routerLink="/login">Login to Apply</a>
+            </mat-card-content>
+          </mat-card>
+        } @else if (isStudent) {
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>Apply Now</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              @if (applied) {
+                <div class="applied-badge">
+                  <mat-icon>check_circle</mat-icon>
+                  <span>Application submitted!</span>
+                </div>
+              } @else {
+                <form [formGroup]="coverLetterForm" (ngSubmit)="apply()">
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Cover Letter (optional)</mat-label>
+                    <textarea matInput formControlName="coverLetter" rows="5"
+                              placeholder="Tell the company why you're a good fit..."></textarea>
+                  </mat-form-field>
+                  <button mat-flat-button type="submit" [disabled]="applying" class="full-width">
+                    @if (applying) { <mat-spinner diameter="20" /> } @else { Submit Application }
+                  </button>
+                </form>
+              }
+            </mat-card-content>
+          </mat-card>
+        }
+      } @else {
+        <mat-card>
+          <mat-card-content>
+            <p class="closed-note">
+              <mat-icon>lock</mat-icon>
+              This offer is no longer accepting applications.
+            </p>
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+  </div>
+}

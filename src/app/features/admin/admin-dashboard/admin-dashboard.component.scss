@@ -1,0 +1,138 @@
+.eyebrow {
+  margin: 0 0 4px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(210px, 1fr));
+  gap: 16px;
+}
+
+.stat-card {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  transition: border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
+
+  &:hover {
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-md) !important;
+    transform: translateY(-1px);
+  }
+
+  mat-card-content {
+    display: flex;
+    min-height: 168px;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 18px;
+  }
+
+  .stat-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+  }
+
+  .icon-badge {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    flex: 0 0 auto;
+    border-radius: 8px;
+
+    mat-icon {
+      width: 24px;
+      height: 24px;
+      font-size: 24px;
+    }
+  }
+
+  .stat-value {
+    margin-top: 8px;
+    font-size: 2.35rem;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--text);
+  }
+
+  .stat-label {
+    color: var(--muted);
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .breakdown {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.8rem;
+    font-weight: 600;
+
+    span {
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: var(--surface-soft);
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    .pending,
+    .ongoing {
+      background: var(--warning-bg);
+      color: var(--warning-text);
+    }
+
+    .accepted,
+    .completed {
+      background: var(--success-bg);
+      color: var(--success-text);
+    }
+
+    .rejected {
+      background: var(--danger-bg);
+      color: var(--danger-text);
+    }
+  }
+
+  &.users .icon-badge {
+    background: #e7f0fb;
+    color: #1769aa;
+  }
+
+  &.offers .icon-badge {
+    background: #f0eafa;
+    color: #6b3fa0;
+  }
+
+  &.applications .icon-badge {
+    background: #fff0e5;
+    color: #c24a00;
+  }
+
+  &.internships .icon-badge {
+    background: #e4f5f1;
+    color: #087568;
+  }
+}
+
+@media (max-width: 1280px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(240px, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}

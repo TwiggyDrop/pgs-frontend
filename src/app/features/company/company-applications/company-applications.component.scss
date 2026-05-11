@@ -1,0 +1,28 @@
+.app-detail {
+  padding: 8px 0;
+
+  h4 { margin: 12px 0 4px; font-size: 0.875rem; font-weight: 600; }
+
+  .applied-at { color: rgba(0,0,0,0.5); font-size: 0.8rem; margin: 0 0 12px; }
+
+  .cover-letter {
+    white-space: pre-wrap;
+    background: #f5f5f5;
+    padding: 12px;
+    border-radius: 8px;
+    margin: 0;
+    font-size: 0.875rem;
+  }
+
+  .actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+  }
+}
+
+mat-panel-description {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

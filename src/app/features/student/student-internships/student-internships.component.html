@@ -1,0 +1,47 @@
+<div class="page-header">
+  <h1>My Internships</h1>
+</div>
+
+@if (loading) {
+  <div class="spinner-container"><mat-spinner /></div>
+} @else if (error) {
+  <div class="error-banner">{{ error }}</div>
+} @else if (internships.length === 0) {
+  <div class="empty-state">
+    <mat-icon>business_center</mat-icon>
+    <p>No internships assigned yet</p>
+  </div>
+} @else {
+  <div class="internships-list">
+    @for (i of internships; track i.id) {
+      <mat-card appearance="outlined">
+        <mat-card-header>
+          <mat-card-title>{{ i.offerTitle }}</mat-card-title>
+          <mat-card-subtitle>{{ i.companyName }}</mat-card-subtitle>
+          <div class="status-badge">
+            <span [class]="'status-chip ' + i.status">{{ i.status }}</span>
+          </div>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="info-row">
+            @if (i.supervisorName) {
+              <span><mat-icon>supervisor_account</mat-icon> {{ i.supervisorName }}</span>
+            }
+            @if (i.startDate) {
+              <span><mat-icon>event</mat-icon> {{ i.startDate | date:'mediumDate' }}
+                @if (i.endDate) { – {{ i.endDate | date:'mediumDate' }} }
+              </span>
+            }
+          </div>
+          @if (i.supervisorNotes) {
+            <mat-divider />
+            <div class="notes">
+              <strong>Supervisor Notes:</strong>
+              <p>{{ i.supervisorNotes }}</p>
+            </div>
+          }
+        </mat-card-content>
+      </mat-card>
+    }
+  </div>
+}

@@ -1,0 +1,45 @@
+<div class="page-header">
+  <h1>My Applications</h1>
+  <a mat-button routerLink="/offers">Browse Offers</a>
+</div>
+
+@if (loading) {
+  <div class="spinner-container"><mat-spinner /></div>
+} @else if (error) {
+  <div class="error-banner">{{ error }}</div>
+} @else if (applications.length === 0) {
+  <div class="empty-state">
+    <mat-icon>assignment</mat-icon>
+    <p>You haven't applied to any offers yet</p>
+    <a mat-flat-button routerLink="/offers">Browse Offers</a>
+  </div>
+} @else {
+  <div class="applications-list">
+    @for (app of applications; track app.id) {
+      <mat-card class="app-card" appearance="outlined">
+        <mat-card-header>
+          <mat-card-title>{{ app.offerTitle }}</mat-card-title>
+          <mat-card-subtitle>{{ app.companyName }}</mat-card-subtitle>
+          <div class="status-area">
+            <span [class]="'status-chip ' + app.status">{{ app.status }}</span>
+          </div>
+        </mat-card-header>
+        <mat-card-content>
+          <p class="date">Applied on {{ app.appliedAt | date:'mediumDate' }}</p>
+          @if (app.adminNotes) {
+            <div class="notes">
+              <mat-icon>info</mat-icon>
+              <span>{{ app.adminNotes }}</span>
+            </div>
+          }
+          @if (app.coverLetter) {
+            <p class="cover-letter-preview">{{ app.coverLetter }}</p>
+          }
+        </mat-card-content>
+        <mat-card-actions>
+          <a mat-button [routerLink]="['/offers', app.offerId]">View Offer</a>
+        </mat-card-actions>
+      </mat-card>
+    }
+  </div>
+}

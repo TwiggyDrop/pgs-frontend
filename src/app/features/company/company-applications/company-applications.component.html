@@ -1,0 +1,55 @@
+<div class="page-header">
+  <h1>Applications for Offer</h1>
+</div>
+
+@if (loading) {
+  <div class="spinner-container"><mat-spinner /></div>
+} @else if (error) {
+  <div class="error-banner">{{ error }}</div>
+} @else if (applications.length === 0) {
+  <div class="empty-state">
+    <mat-icon>inbox</mat-icon>
+    <p>No applications received yet</p>
+  </div>
+} @else {
+  <mat-accordion>
+    @for (app of applications; track app.id) {
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>{{ app.studentName }}</mat-panel-title>
+          <mat-panel-description>
+            {{ app.studentEmail }} &nbsp;|&nbsp;
+            <span [class]="'status-chip ' + app.status">{{ app.status }}</span>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <div class="app-detail">
+          <p class="applied-at">Applied: {{ app.appliedAt | date:'medium' }}</p>
+
+          @if (app.coverLetter) {
+            <h4>Cover Letter</h4>
+            <p class="cover-letter">{{ app.coverLetter }}</p>
+          }
+
+          @if (app.adminNotes) {
+            <h4>Notes</h4>
+            <p>{{ app.adminNotes }}</p>
+          }
+
+          @if (app.status === 'PENDING') {
+            <div class="actions">
+              <button mat-flat-button color="primary" (click)="updateStatus(app, 'ACCEPTED')"
+                      [disabled]="updatingStatus[app.id]">
+                <mat-icon>check</mat-icon> Accept
+              </button>
+              <button mat-stroked-button color="warn" (click)="updateStatus(app, 'REJECTED')"
+                      [disabled]="updatingStatus[app.id]">
+                <mat-icon>close</mat-icon> Reject
+              </button>
+            </div>
+          }
+        </div>
+      </mat-expansion-panel>
+    }
+  </mat-accordion>
+}

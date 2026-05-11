@@ -1,0 +1,56 @@
+table {
+  width: 100%;
+}
+
+.filters {
+  .role-filter {
+    min-width: 180px;
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    outline: none;
+
+    &:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(23, 105, 170, 0.12);
+    }
+  }
+}
+
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0;
+
+  &.role-STUDENT {
+    background: #e7f2ff;
+    color: #075cab;
+  }
+
+  &.role-COMPANY {
+    background: #f2eafa;
+    color: #6b21a8;
+  }
+
+  &.role-SUPERVISOR {
+    background: #e7f6ee;
+    color: #17643a;
+  }
+
+  &.role-ADMIN {
+    background: #fde8ef;
+    color: #b4235a;
+  }
+}
