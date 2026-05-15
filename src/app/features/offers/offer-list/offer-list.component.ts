@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DatePipe, SlicePipe } from '@angular/common';
@@ -9,20 +9,27 @@ import { MatRippleModule } from '@angular/material/core';
 import { OfferService } from '../../../core/services/offer.service';
 import { ApiService } from '../../../core/services/api.service';
 import { OfferResponse } from '../../../core/models/offer.models';
+import { subscribeForView } from '../../../shared/utils/view-subscribe';
 
 @Component({
   selector: 'app-offer-list',
   standalone: true,
   imports: [
-    RouterLink, FormsModule, DatePipe, SlicePipe,
-    MatIconModule, MatTooltipModule, MatRippleModule
+    RouterLink,
+    FormsModule,
+    DatePipe,
+    SlicePipe,
+    MatIconModule,
+    MatTooltipModule,
+    MatRippleModule,
   ],
   templateUrl: './offer-list.component.html',
-  styleUrl: './offer-list.component.scss'
+  styleUrl: './offer-list.component.scss',
 })
 export class OfferListComponent implements OnInit, OnDestroy {
   private offerService = inject(OfferService);
   private apiService = inject(ApiService);
+  private cdr = inject(ChangeDetectorRef);
   private sub = new Subscription();
 
   offers: OfferResponse[] = [];
@@ -53,27 +60,30 @@ export class OfferListComponent implements OnInit, OnDestroy {
 
   private load() {
     this.sub.add(
-      this.offerService.getAll()
-        .pipe(finalize(() => this.loading = false))
-        .subscribe({
+      subscribeForView(
+        this.offerService.getAll().pipe(finalize(() => (this.loading = false))),
+        this.cdr,
+        {
           next: (offers) => {
             this.offers = offers;
             this.filtered = offers;
           },
           error: (err) => {
             this.error = err.message || 'Failed to load offers';
-          }
-        })
+          },
+        },
+      ),
     );
   }
 
   filter() {
     const q = this.searchQuery.toLowerCase();
-    this.filtered = this.offers.filter(o =>
-      o.title.toLowerCase().includes(q) ||
-      o.companyName.toLowerCase().includes(q) ||
-      (o.domain?.toLowerCase() ?? '').includes(q) ||
-      (o.location?.toLowerCase() ?? '').includes(q)
+    this.filtered = this.offers.filter(
+      (o) =>
+        o.title.toLowerCase().includes(q) ||
+        o.companyName.toLowerCase().includes(q) ||
+        (o.domain?.toLowerCase() ?? '').includes(q) ||
+        (o.location?.toLowerCase() ?? '').includes(q),
     );
   }
 }

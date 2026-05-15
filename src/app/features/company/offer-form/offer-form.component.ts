@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { finalize } from 'rxjs';
@@ -9,17 +9,21 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { OfferService } from '../../../core/services/offer.service';
 import { CreateOfferRequest } from '../../../core/models/offer.models';
+import { subscribeForView } from '../../../shared/utils/view-subscribe';
 
 @Component({
   selector: 'app-offer-form',
   standalone: true,
   imports: [
-    RouterLink, ReactiveFormsModule,
-    MatFormFieldModule, MatInputModule,
-    MatIconModule, MatProgressSpinnerModule
+    RouterLink,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './offer-form.component.html',
-  styleUrl: './offer-form.component.scss'
+  styleUrl: './offer-form.component.scss',
 })
 export class OfferFormComponent implements OnInit {
   private route = inject(ActivatedRoute);
@@ -27,6 +31,7 @@ export class OfferFormComponent implements OnInit {
   private offerService = inject(OfferService);
   private snack = inject(MatSnackBar);
   private fb = inject(FormBuilder);
+  private cdr = inject(ChangeDetectorRef);
 
   editId: number | null = null;
   loading = false;
@@ -40,10 +45,12 @@ export class OfferFormComponent implements OnInit {
     location: [''],
     startDate: ['', Validators.required],
     endDate: ['', Validators.required],
-    durationMonths: [null as number | null]
+    durationMonths: [null as number | null],
   });
 
-  get isEdit() { return this.editId !== null; }
+  get isEdit() {
+    return this.editId !== null;
+  }
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
@@ -54,23 +61,27 @@ export class OfferFormComponent implements OnInit {
         return;
       }
       this.loading = true;
-      this.offerService.getById(this.editId).pipe(
-        finalize(() => this.loading = false)
-      ).subscribe({
-        next: (offer) => {
-          this.form.patchValue({
-            title: offer.title,
-            description: offer.description,
-            requiredSkills: offer.requiredSkills ?? '',
-            domain: offer.domain ?? '',
-            location: offer.location ?? '',
-            startDate: offer.startDate,
-            endDate: offer.endDate,
-            durationMonths: offer.durationMonths
-          });
+      subscribeForView(
+        this.offerService.getById(this.editId).pipe(finalize(() => (this.loading = false))),
+        this.cdr,
+        {
+          next: (offer) => {
+            this.form.patchValue({
+              title: offer.title,
+              description: offer.description,
+              requiredSkills: offer.requiredSkills ?? '',
+              domain: offer.domain ?? '',
+              location: offer.location ?? '',
+              startDate: offer.startDate,
+              endDate: offer.endDate,
+              durationMonths: offer.durationMonths,
+            });
+          },
+          error: () => {
+            this.router.navigate(['/company/offers']);
+          },
         },
-        error: () => { this.router.navigate(['/company/offers']); }
-      });
+      );
     }
   }
 
@@ -87,23 +98,21 @@ export class OfferFormComponent implements OnInit {
       location: value.location || undefined,
       startDate: value.startDate ?? '',
       endDate: value.endDate ?? '',
-      durationMonths: value.durationMonths ?? undefined
+      durationMonths: value.durationMonths ?? undefined,
     };
 
     const action$ = this.isEdit
       ? this.offerService.update(this.editId!, req)
       : this.offerService.create(req);
 
-    action$.pipe(
-      finalize(() => this.saving = false)
-    ).subscribe({
+    subscribeForView(action$.pipe(finalize(() => (this.saving = false))), this.cdr, {
       next: () => {
         this.snack.open(this.isEdit ? 'Offer updated' : 'Offer created', 'OK', { duration: 3000 });
         this.router.navigate(['/company/offers']);
       },
       error: (err) => {
         this.snack.open(err.message || 'Save failed', 'OK', { duration: 4000 });
-      }
+      },
     });
   }
 }

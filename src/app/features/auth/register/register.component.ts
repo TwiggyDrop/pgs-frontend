@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
@@ -12,22 +12,31 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDividerModule } from '@angular/material/divider';
 import { AuthService } from '../../../core/services/auth.service';
 import { RegisterRequest, Role } from '../../../core/models/auth.models';
+import { subscribeForView } from '../../../shared/utils/view-subscribe';
 
 @Component({
   selector: 'app-register',
   standalone: true,
   imports: [
-    ReactiveFormsModule, RouterLink,
-    MatCardModule, MatFormFieldModule, MatInputModule, MatSelectModule,
-    MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatDividerModule
+    ReactiveFormsModule,
+    RouterLink,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatDividerModule,
   ],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.scss'
+  styleUrl: './register.component.scss',
 })
 export class RegisterComponent {
   private fb = inject(FormBuilder);
   private auth = inject(AuthService);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
 
   form = this.fb.group({
     firstName: ['', Validators.required],
@@ -42,7 +51,7 @@ export class RegisterComponent {
     industry: [''],
     website: [''],
     department: [''],
-    phone: ['']
+    phone: [''],
   });
 
   loading = false;
@@ -50,12 +59,29 @@ export class RegisterComponent {
   hidePassword = true;
 
   readonly roleOptions = [
-    { value: 'STUDENT',    label: 'Student',    icon: 'person',             description: 'Find and apply to internships' },
-    { value: 'COMPANY',    label: 'Company',    icon: 'business',           description: 'Post offers and hire interns'  },
-    { value: 'SUPERVISOR', label: 'Supervisor', icon: 'supervisor_account', description: 'Oversee and mentor interns'    }
+    {
+      value: 'STUDENT',
+      label: 'Student',
+      icon: 'person',
+      description: 'Find and apply to internships',
+    },
+    {
+      value: 'COMPANY',
+      label: 'Company',
+      icon: 'business',
+      description: 'Post offers and hire interns',
+    },
+    {
+      value: 'SUPERVISOR',
+      label: 'Supervisor',
+      icon: 'supervisor_account',
+      description: 'Oversee and mentor interns',
+    },
   ];
 
-  get role() { return this.form.get('role')?.value; }
+  get role() {
+    return this.form.get('role')?.value;
+  }
 
   submit() {
     if (this.form.invalid || this.loading) return;
@@ -77,23 +103,32 @@ export class RegisterComponent {
       ...(v.industry && { industry: v.industry }),
       ...(v.website && { website: v.website }),
       ...(v.department && { department: v.department }),
-      ...(v.phone && { phone: v.phone })
+      ...(v.phone && { phone: v.phone }),
     };
 
-    this.auth.register(request).pipe(
-      finalize(() => this.loading = false)
-    ).subscribe({
-      next: (res) => {
-        switch (res.role) {
-          case 'COMPANY': this.router.navigate(['/company/offers']); break;
-          case 'STUDENT': this.router.navigate(['/student/applications']); break;
-          case 'SUPERVISOR': this.router.navigate(['/supervisor/internships']); break;
-          default: this.router.navigate(['/offers']);
-        }
+    subscribeForView(
+      this.auth.register(request).pipe(finalize(() => (this.loading = false))),
+      this.cdr,
+      {
+        next: (res) => {
+          switch (res.role) {
+            case 'COMPANY':
+              this.router.navigate(['/company/offers']);
+              break;
+            case 'STUDENT':
+              this.router.navigate(['/student/applications']);
+              break;
+            case 'SUPERVISOR':
+              this.router.navigate(['/supervisor/internships']);
+              break;
+            default:
+              this.router.navigate(['/offers']);
+          }
+        },
+        error: (err) => {
+          this.error = err.message || 'Registration failed. Please try again.';
+        },
       },
-      error: (err) => {
-        this.error = err.message || 'Registration failed. Please try again.';
-      }
-    });
+    );
   }
 }

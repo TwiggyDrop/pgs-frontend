@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, OnDestroy, inject, ViewChild } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { MatSidenavModule, MatSidenav } from '@angular/material/sidenav';
@@ -9,6 +9,7 @@ import { MatRippleModule } from '@angular/material/core';
 import { Subject, takeUntil } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 import { AuthResponse } from '../../core/models/auth.models';
+import { subscribeForView } from '../utils/view-subscribe';
 
 interface NavItem {
   path: string;
@@ -25,12 +26,17 @@ interface NavSection {
   selector: 'app-shell',
   standalone: true,
   imports: [
-    RouterOutlet, RouterLink, RouterLinkActive,
-    MatSidenavModule, MatIconModule, MatButtonModule,
-    MatTooltipModule, MatRippleModule
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
+    MatSidenavModule,
+    MatIconModule,
+    MatButtonModule,
+    MatTooltipModule,
+    MatRippleModule,
   ],
   templateUrl: './shell.component.html',
-  styleUrl: './shell.component.scss'
+  styleUrl: './shell.component.scss',
 })
 export class ShellComponent implements OnInit, OnDestroy {
   @ViewChild('sidenav') sidenav!: MatSidenav;
@@ -38,6 +44,7 @@ export class ShellComponent implements OnInit, OnDestroy {
   private auth = inject(AuthService);
   private router = inject(Router);
   private breakpoints = inject(BreakpointObserver);
+  private cdr = inject(ChangeDetectorRef);
   private destroy$ = new Subject<void>();
 
   sidenavOpened = true;
@@ -48,9 +55,13 @@ export class ShellComponent implements OnInit, OnDestroy {
   // Reactive user snapshot — updated when me() completes so navSections re-render
   currentUser: AuthResponse | null = this.auth.getUser();
 
-  get isLoggedIn() { return this.auth.isLoggedIn(); }
+  get isLoggedIn() {
+    return this.auth.isLoggedIn();
+  }
 
-  private get role() { return this.currentUser?.role; }
+  private get role() {
+    return this.currentUser?.role;
+  }
 
   get userInitials(): string {
     const u = this.currentUser;
@@ -70,9 +81,7 @@ export class ShellComponent implements OnInit, OnDestroy {
     const sections: NavSection[] = [];
 
     sections.push({
-      items: [
-        { path: '/offers', icon: 'work_outline', label: 'Browse Offers' }
-      ]
+      items: [{ path: '/offers', icon: 'work_outline', label: 'Browse Offers' }],
     });
 
     if (this.role === 'STUDENT') {
@@ -80,17 +89,15 @@ export class ShellComponent implements OnInit, OnDestroy {
         heading: 'My Activity',
         items: [
           { path: '/student/applications', icon: 'assignment', label: 'My Applications' },
-          { path: '/student/internships', icon: 'business_center', label: 'My Internships' }
-        ]
+          { path: '/student/internships', icon: 'business_center', label: 'My Internships' },
+        ],
       });
     }
 
     if (this.role === 'COMPANY') {
       sections.push({
         heading: 'Company',
-        items: [
-          { path: '/company/offers', icon: 'add_business', label: 'My Offers' }
-        ]
+        items: [{ path: '/company/offers', icon: 'add_business', label: 'My Offers' }],
       });
     }
 
@@ -98,8 +105,8 @@ export class ShellComponent implements OnInit, OnDestroy {
       sections.push({
         heading: 'Supervision',
         items: [
-          { path: '/supervisor/internships', icon: 'supervisor_account', label: 'Internships' }
-        ]
+          { path: '/supervisor/internships', icon: 'supervisor_account', label: 'Internships' },
+        ],
       });
     }
 
@@ -110,8 +117,8 @@ export class ShellComponent implements OnInit, OnDestroy {
           { path: '/admin/dashboard', icon: 'dashboard', label: 'Dashboard' },
           { path: '/admin/users', icon: 'people', label: 'Users' },
           { path: '/admin/applications', icon: 'description', label: 'Applications' },
-          { path: '/admin/internships', icon: 'business_center', label: 'Internships' }
-        ]
+          { path: '/admin/internships', icon: 'business_center', label: 'Internships' },
+        ],
       });
     }
 
@@ -120,29 +127,36 @@ export class ShellComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // Subscribe to auth state reactively so nav sections update when me() resolves
-    this.auth.currentUser()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(user => { this.currentUser = user; });
+    subscribeForView(this.auth.currentUser().pipe(takeUntil(this.destroy$)), this.cdr, {
+      next: (user) => {
+        this.currentUser = user;
+      },
+    });
 
     // Refresh user profile from server once on shell init (fire-and-forget)
     if (this.auth.isLoggedIn()) {
-      this.auth.me().pipe(takeUntil(this.destroy$)).subscribe({ error: () => undefined });
+      subscribeForView(this.auth.me().pipe(takeUntil(this.destroy$)), this.cdr, {
+        error: () => undefined,
+      });
     }
 
-    this.breakpoints
-      .observe(['(max-width: 767px)'])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(result => {
-        this.isMobile = result.matches;
-        if (this.isMobile) {
-          this.sidenavMode = 'over';
-          this.sidenavOpened = false;
-          this.isCompact = false;
-        } else {
-          this.sidenavMode = 'side';
-          this.sidenavOpened = true;
-        }
-      });
+    subscribeForView(
+      this.breakpoints.observe(['(max-width: 767px)']).pipe(takeUntil(this.destroy$)),
+      this.cdr,
+      {
+        next: (result) => {
+          this.isMobile = result.matches;
+          if (this.isMobile) {
+            this.sidenavMode = 'over';
+            this.sidenavOpened = false;
+            this.isCompact = false;
+          } else {
+            this.sidenavMode = 'side';
+            this.sidenavOpened = true;
+          }
+        },
+      },
+    );
   }
 
   ngOnDestroy() {
