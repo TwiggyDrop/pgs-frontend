@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, finalize, retry, shareReplay, tap, throwError, timeout, timer } from 'rxjs';
+import { Observable, of, catchError, finalize, retry, shareReplay, tap, throwError, timeout, timer } from 'rxjs';
 
 export class ApiError extends Error {
   constructor(
@@ -18,36 +18,52 @@ export class ApiService {
   private readonly requestTimeoutMs = 15000;
   private readonly cacheTtlMs = 60000;
   private readonly retryableStatuses = new Set([0, 408, 429, 500, 502, 503, 504]);
-  private readonly getCache = new Map<string, { expiresAt: number; response$: Observable<unknown> }>();
+
+  /**
+   * Stores resolved response values with a TTL.
+   * Cache hits return of(value) — always synchronous, always within zone.
+   */
+  private readonly resultCache = new Map<string, { expiresAt: number; value: unknown }>();
+
+  /**
+   * Stores in-flight observables so concurrent subscribers share one HTTP request.
+   * Uses refCount:true so the source is cancelled when all subscribers leave.
+   */
+  private readonly inflightCache = new Map<string, Observable<unknown>>();
 
   constructor(private http: HttpClient) {}
 
   get<T>(url: string): Observable<T> {
-    const cached = this.getCache.get(url);
+    // 1. Cache hit — synchronous, always inside Angular zone
+    const cached = this.resultCache.get(url);
     if (cached && cached.expiresAt > Date.now()) {
-      return cached.response$ as Observable<T>;
+      return of(cached.value as T);
     }
 
-    const response$ = this.request<T>('GET', url).pipe(
-      catchError((error) => {
-        this.getCache.delete(url);
+    // 2. In-flight deduplication — share the running request
+    const inflight = this.inflightCache.get(url);
+    if (inflight) {
+      return inflight as Observable<T>;
+    }
+
+    // 3. New HTTP request
+    const request$ = this.request<T>('GET', url).pipe(
+      tap(value => {
+        this.resultCache.set(url, { expiresAt: Date.now() + this.cacheTtlMs, value });
+      }),
+      catchError(error => {
+        this.resultCache.delete(url);
         return throwError(() => error);
       }),
-      finalize(() => {
-        const current = this.getCache.get(url);
-        if (current?.response$ === response$ && current.expiresAt <= Date.now()) {
-          this.getCache.delete(url);
-        }
-      }),
-      shareReplay({ bufferSize: 1, refCount: false })
+      finalize(() => this.inflightCache.delete(url)),
+      // refCount:true — source is cancelled when all subscribers unsubscribe.
+      // This prevents ghost HTTP requests from a previous navigation polluting
+      // the resultCache after the cache has been invalidated by a mutation.
+      shareReplay({ bufferSize: 1, refCount: true })
     );
 
-    this.getCache.set(url, {
-      expiresAt: Date.now() + this.cacheTtlMs,
-      response$
-    });
-
-    return response$;
+    this.inflightCache.set(url, request$);
+    return request$;
   }
 
   post<T>(url: string, body: unknown): Observable<T> {
@@ -68,13 +84,17 @@ export class ApiService {
 
   invalidateCache(urlPrefix?: string): void {
     if (!urlPrefix) {
-      this.getCache.clear();
+      this.resultCache.clear();
+      // Do NOT clear inflightCache — existing subscribers still hold references
+      // to those observables. They will complete/error normally. On the next
+      // api.get() call the inflight entry will be gone (finalize removes it),
+      // so a fresh request fires.
       return;
     }
 
-    for (const key of this.getCache.keys()) {
+    for (const key of this.resultCache.keys()) {
       if (key.startsWith(urlPrefix)) {
-        this.getCache.delete(key);
+        this.resultCache.delete(key);
       }
     }
   }

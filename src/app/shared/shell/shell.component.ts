@@ -8,6 +8,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatRippleModule } from '@angular/material/core';
 import { Subject, takeUntil } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
+import { AuthResponse } from '../../core/models/auth.models';
 
 interface NavItem {
   path: string;
@@ -44,14 +45,15 @@ export class ShellComponent implements OnInit, OnDestroy {
   isCompact = false;
   isMobile = false;
 
-  // ── User accessors ──────────────────────────────────────────
-  get user() { return this.auth.getUser(); }
+  // Reactive user snapshot — updated when me() completes so navSections re-render
+  currentUser: AuthResponse | null = this.auth.getUser();
+
   get isLoggedIn() { return this.auth.isLoggedIn(); }
 
-  private get role() { return this.user?.role; }
+  private get role() { return this.currentUser?.role; }
 
   get userInitials(): string {
-    const u = this.user;
+    const u = this.currentUser;
     if (!u) return '?';
     const f = u.firstName?.[0] ?? '';
     const l = u.lastName?.[0] ?? '';
@@ -59,16 +61,14 @@ export class ShellComponent implements OnInit, OnDestroy {
   }
 
   get userFullName(): string {
-    const u = this.user;
+    const u = this.currentUser;
     if (!u) return '';
     return `${u.firstName ?? ''} ${u.lastName ?? ''}`.trim();
   }
 
-  // ── Navigation config (role-driven) ─────────────────────────
   get navSections(): NavSection[] {
     const sections: NavSection[] = [];
 
-    // Always visible
     sections.push({
       items: [
         { path: '/offers', icon: 'work_outline', label: 'Browse Offers' }
@@ -118,10 +118,15 @@ export class ShellComponent implements OnInit, OnDestroy {
     return sections;
   }
 
-  // ── Lifecycle ────────────────────────────────────────────────
   ngOnInit() {
+    // Subscribe to auth state reactively so nav sections update when me() resolves
+    this.auth.currentUser()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(user => { this.currentUser = user; });
+
+    // Refresh user profile from server once on shell init (fire-and-forget)
     if (this.auth.isLoggedIn()) {
-      this.auth.me().subscribe({ error: () => undefined });
+      this.auth.me().pipe(takeUntil(this.destroy$)).subscribe({ error: () => undefined });
     }
 
     this.breakpoints
@@ -145,7 +150,6 @@ export class ShellComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  // ── Actions ──────────────────────────────────────────────────
   toggleSidebar() {
     if (this.isMobile) {
       this.sidenavOpened = !this.sidenavOpened;

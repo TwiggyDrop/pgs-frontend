@@ -70,7 +70,7 @@
           <div class="user-avatar" aria-label="{{ userFullName }}">{{ userInitials }}</div>
           <div class="user-details">
             <div class="user-name">{{ userFullName }}</div>
-            <div class="user-role">{{ user?.role }}</div>
+            <div class="user-role">{{ currentUser?.role }}</div>
           </div>
         </div>
 
@@ -129,8 +129,8 @@
           <div class="header-user" aria-label="Logged in as {{ userFullName }}">
             <div class="header-avatar" aria-hidden="true">{{ userInitials }}</div>
             <div class="header-user-text">
-              <span class="header-user-name">{{ user?.firstName }}</span>
-              <span class="header-user-role">{{ user?.role }}</span>
+              <span class="header-user-name">{{ currentUser?.firstName }}</span>
+              <span class="header-user-role">{{ currentUser?.role }}</span>
             </div>
           </div>
         } @else {

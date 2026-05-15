@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { CreateOfferRequest, OfferResponse } from '../models/offer.models';
 import { ApiService } from './api.service';
@@ -7,27 +7,11 @@ import { ApiService } from './api.service';
 @Injectable({ providedIn: 'root' })
 export class OfferService {
   private readonly base = `${environment.apiUrl}/offers`;
-  private cachedOffers: OfferResponse[] | null = null;
 
   constructor(private api: ApiService) {}
 
-  get hasCachedOffers(): boolean { return this.cachedOffers !== null; }
-
   getAll(): Observable<OfferResponse[]> {
-    if (this.cachedOffers !== null) {
-      return of(this.cachedOffers);
-    }
-    return this.api.get<OfferResponse[]>(this.base).pipe(
-      tap(offers => this.cachedOffers = offers)
-    );
-  }
-
-  refreshAll(): Observable<OfferResponse[]> {
-    this.cachedOffers = null;
-    this.api.invalidateCache(this.base);
-    return this.api.get<OfferResponse[]>(this.base).pipe(
-      tap(offers => this.cachedOffers = offers)
-    );
+    return this.api.get<OfferResponse[]>(this.base);
   }
 
   getById(id: number): Observable<OfferResponse> {

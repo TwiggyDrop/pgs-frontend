@@ -2,11 +2,12 @@ import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DatePipe, SlicePipe } from '@angular/common';
-import { finalize, Observable, Subscription } from 'rxjs';
+import { finalize, Subscription } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatRippleModule } from '@angular/material/core';
 import { OfferService } from '../../../core/services/offer.service';
+import { ApiService } from '../../../core/services/api.service';
 import { OfferResponse } from '../../../core/models/offer.models';
 
 @Component({
@@ -21,43 +22,48 @@ import { OfferResponse } from '../../../core/models/offer.models';
 })
 export class OfferListComponent implements OnInit, OnDestroy {
   private offerService = inject(OfferService);
+  private apiService = inject(ApiService);
   private sub = new Subscription();
 
   offers: OfferResponse[] = [];
   filtered: OfferResponse[] = [];
-  loading = !this.offerService.hasCachedOffers;
+  loading = true;
   error = '';
   searchQuery = '';
   skeletonCards = Array.from({ length: 6 });
 
   ngOnInit() {
-    this.fetch(this.offerService.getAll());
+    this.load();
   }
 
   ngOnDestroy() {
     this.sub.unsubscribe();
   }
 
-  refreshOffers() {
+  refresh() {
     this.sub.unsubscribe();
     this.sub = new Subscription();
     this.error = '';
     this.searchQuery = '';
     this.loading = true;
-    this.fetch(this.offerService.refreshAll());
+    // Bypass cache for manual refresh
+    this.apiService.invalidateCache('/api/offers');
+    this.load();
   }
 
-  private fetch(source: Observable<OfferResponse[]>) {
+  private load() {
     this.sub.add(
-      source.pipe(finalize(() => this.loading = false)).subscribe({
-        next: (offers) => {
-          this.offers = offers;
-          this.filtered = offers;
-        },
-        error: (err) => {
-          this.error = err.message || 'Failed to load offers';
-        }
-      })
+      this.offerService.getAll()
+        .pipe(finalize(() => this.loading = false))
+        .subscribe({
+          next: (offers) => {
+            this.offers = offers;
+            this.filtered = offers;
+          },
+          error: (err) => {
+            this.error = err.message || 'Failed to load offers';
+          }
+        })
     );
   }
 

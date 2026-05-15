@@ -9,6 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OfferService } from '../../../core/services/offer.service';
 import { OfferResponse } from '../../../core/models/offer.models';
+import { ConfirmDialogService } from '../../../shared/components/confirm-dialog/confirm-dialog.service';
 
 @Component({
   selector: 'app-company-offers',
@@ -24,6 +25,7 @@ import { OfferResponse } from '../../../core/models/offer.models';
 export class CompanyOffersComponent implements OnInit {
   private offerService = inject(OfferService);
   private snack = inject(MatSnackBar);
+  private confirmDialog = inject(ConfirmDialogService);
 
   offers: OfferResponse[] = [];
   loading = true;
@@ -62,17 +64,22 @@ export class CompanyOffersComponent implements OnInit {
 
   delete(offer: OfferResponse) {
     if (this.deleting[offer.id]) return;
-    if (!confirm(`Delete "${offer.title}"?`)) return;
 
-    this.deleting[offer.id] = true;
-    this.offerService.delete(offer.id).pipe(
-      finalize(() => this.deleting[offer.id] = false)
-    ).subscribe({
-      next: () => {
-        this.offers = this.offers.filter(o => o.id !== offer.id);
-        this.snack.open('Offer deleted', 'OK', { duration: 3000 });
-      },
-      error: (err) => this.snack.open(err.message || 'Failed to delete', 'OK', { duration: 3000 })
-    });
+    this.confirmDialog
+      .danger(`Delete "${offer.title}"?`, 'This offer will be permanently removed and cannot be recovered.')
+      .subscribe(confirmed => {
+        if (!confirmed) return;
+
+        this.deleting[offer.id] = true;
+        this.offerService.delete(offer.id).pipe(
+          finalize(() => { this.deleting[offer.id] = false; })
+        ).subscribe({
+          next: () => {
+            this.offers = this.offers.filter(o => o.id !== offer.id);
+            this.snack.open('Offer deleted', 'OK', { duration: 3000 });
+          },
+          error: (err) => this.snack.open(err.message || 'Failed to delete', 'OK', { duration: 3000 })
+        });
+      });
   }
 }
