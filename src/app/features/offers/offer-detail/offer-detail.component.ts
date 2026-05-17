@@ -11,11 +11,12 @@ import { ApplicationService } from '../../../core/services/application.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { OfferResponse } from '../../../core/models/offer.models';
 import { subscribeForView } from '../../../shared/utils/view-subscribe';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-offer-detail',
   standalone: true,
-  imports: [RouterLink, DatePipe, ReactiveFormsModule, MatIconModule, MatProgressSpinnerModule],
+  imports: [TranslatePipe, RouterLink, DatePipe, ReactiveFormsModule, MatIconModule, MatProgressSpinnerModule],
   templateUrl: './offer-detail.component.html',
   styleUrl: './offer-detail.component.scss',
 })
@@ -90,3 +91,4 @@ export class OfferDetailComponent implements OnInit {
     );
   }
 }
+

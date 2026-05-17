@@ -100,3 +100,4 @@ export class ConfirmDialogComponent {
   confirm() { this.dialogRef.close(true); }
   cancel()  { this.dialogRef.close(false); }
 }
+

@@ -1,5 +1,5 @@
 <!-- Skip navigation (accessibility) -->
-<a class="skip-link" href="#main-content">Skip to main content</a>
+<a class="skip-link" href="#main-content">{{ 'shell.skip' | translate }}</a>
 
 <mat-sidenav-container class="app-shell" [hasBackdrop]="isMobile">
 
@@ -13,7 +13,7 @@
     [mode]="sidenavMode"
     [(opened)]="sidenavOpened"
     [fixedInViewport]="true"
-    aria-label="Main navigation">
+    [attr.aria-label]="'shell.mainNavigation' | translate">
 
     <!-- Logo / Brand -->
     <div class="sidenav-brand">
@@ -22,17 +22,17 @@
       </div>
       <div class="brand-text">
         <span class="brand-name">PGS</span>
-        <span class="brand-subtitle">Platform</span>
+        <span class="brand-subtitle">{{ 'common.app.platform' | translate }}</span>
       </div>
     </div>
 
     <!-- Navigation sections -->
-    <nav class="sidenav-nav" aria-label="Main">
+    <nav class="sidenav-nav" [attr.aria-label]="'shell.main' | translate">
       @for (section of navSections; track section.heading ?? 'root') {
 
         @if (section.heading && !isCompact) {
           <div class="nav-section-heading" aria-hidden="true">
-            {{ section.heading }}
+            {{ section.heading | translate }}
           </div>
         }
 
@@ -42,8 +42,8 @@
             [routerLink]="item.path"
             routerLinkActive="active"
             [routerLinkActiveOptions]="{ exact: false }"
-            [attr.aria-label]="item.label"
-            [matTooltip]="isCompact ? item.label : ''"
+            [attr.aria-label]="item.labelKey | translate"
+            [matTooltip]="isCompact ? (item.labelKey | translate) : ''"
             matTooltipPosition="right"
             (click)="closeMobileNav()"
             matRipple
@@ -51,7 +51,7 @@
             <span class="nav-icon" aria-hidden="true">
               <mat-icon>{{ item.icon }}</mat-icon>
             </span>
-            <span class="nav-label">{{ item.label }}</span>
+            <span class="nav-label">{{ item.labelKey | translate }}</span>
           </a>
         }
 
@@ -78,24 +78,24 @@
           class="nav-item logout"
           type="button"
           (click)="logout()"
-          [attr.aria-label]="'Logout'"
-          [matTooltip]="isCompact ? 'Logout' : ''"
+          [attr.aria-label]="'common.actions.logout' | translate"
+          [matTooltip]="isCompact ? ('common.actions.logout' | translate) : ''"
           matTooltipPosition="right"
           matRipple>
           <span class="nav-icon" aria-hidden="true">
             <mat-icon>logout</mat-icon>
           </span>
-          <span class="nav-label">Logout</span>
+          <span class="nav-label">{{ 'common.actions.logout' | translate }}</span>
         </button>
 
       } @else {
         <a class="nav-item" routerLink="/login" (click)="closeMobileNav()" matRipple>
           <span class="nav-icon"><mat-icon>login</mat-icon></span>
-          <span class="nav-label">Sign In</span>
+          <span class="nav-label">{{ 'common.actions.signIn' | translate }}</span>
         </a>
         <a class="nav-item" routerLink="/register" (click)="closeMobileNav()" matRipple>
           <span class="nav-icon"><mat-icon>person_add</mat-icon></span>
-          <span class="nav-label">Register</span>
+          <span class="nav-label">{{ 'common.actions.register' | translate }}</span>
         </a>
       }
     </div>
@@ -114,7 +114,7 @@
         class="header-toggle"
         type="button"
         (click)="toggleSidebar()"
-        [attr.aria-label]="(sidenavOpened && !isMobile) ? 'Collapse sidebar' : 'Expand sidebar'"
+        [attr.aria-label]="((sidenavOpened && !isMobile) ? 'shell.collapseSidebar' : 'shell.expandSidebar') | translate"
         [attr.aria-expanded]="sidenavOpened"
         matRipple
         [matRippleColor]="'rgba(15,23,42,0.06)'">
@@ -124,9 +124,10 @@
       <div class="header-spacer" aria-hidden="true"></div>
 
       <!-- Right actions -->
-      <div class="header-end" role="complementary" aria-label="User actions">
+      <div class="header-end" role="complementary" [attr.aria-label]="'shell.userActions' | translate">
+        <app-language-switcher />
         @if (isLoggedIn) {
-          <div class="header-user" aria-label="Logged in as {{ userFullName }}">
+          <div class="header-user" [attr.aria-label]="'shell.loggedInAs' | translate: { name: userFullName }">
             <div class="header-avatar" aria-hidden="true">{{ userInitials }}</div>
             <div class="header-user-text">
               <span class="header-user-name">{{ currentUser?.firstName }}</span>
@@ -134,7 +135,7 @@
             </div>
           </div>
         } @else {
-          <a class="header-sign-in" routerLink="/login">Sign In</a>
+          <a class="header-sign-in" routerLink="/login">{{ 'common.actions.signIn' | translate }}</a>
         }
       </div>
     </header>
@@ -148,3 +149,5 @@
 
   </mat-sidenav-content>
 </mat-sidenav-container>
+
+

@@ -10,11 +10,12 @@ import { OfferService } from '../../../core/services/offer.service';
 import { ApiService } from '../../../core/services/api.service';
 import { OfferResponse } from '../../../core/models/offer.models';
 import { subscribeForView } from '../../../shared/utils/view-subscribe';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-offer-list',
   standalone: true,
-  imports: [
+  imports: [TranslatePipe, 
     RouterLink,
     FormsModule,
     DatePipe,
@@ -87,3 +88,4 @@ export class OfferListComponent implements OnInit, OnDestroy {
     );
   }
 }
+

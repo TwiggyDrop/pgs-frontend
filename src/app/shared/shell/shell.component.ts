@@ -6,15 +6,17 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatRippleModule } from '@angular/material/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Subject, takeUntil } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 import { AuthResponse } from '../../core/models/auth.models';
 import { subscribeForView } from '../utils/view-subscribe';
+import { LanguageSwitcherComponent } from '../components/language-switcher/language-switcher.component';
 
 interface NavItem {
   path: string;
   icon: string;
-  label: string;
+  labelKey: string;
 }
 
 interface NavSection {
@@ -34,6 +36,8 @@ interface NavSection {
     MatButtonModule,
     MatTooltipModule,
     MatRippleModule,
+    TranslatePipe,
+    LanguageSwitcherComponent,
   ],
   templateUrl: './shell.component.html',
   styleUrl: './shell.component.scss',
@@ -81,43 +85,43 @@ export class ShellComponent implements OnInit, OnDestroy {
     const sections: NavSection[] = [];
 
     sections.push({
-      items: [{ path: '/offers', icon: 'work_outline', label: 'Browse Offers' }],
+      items: [{ path: '/offers', icon: 'work_outline', labelKey: 'shell.nav.browseOffers' }],
     });
 
     if (this.role === 'STUDENT') {
       sections.push({
-        heading: 'My Activity',
+        heading: 'shell.nav.myActivity',
         items: [
-          { path: '/student/applications', icon: 'assignment', label: 'My Applications' },
-          { path: '/student/internships', icon: 'business_center', label: 'My Internships' },
+          { path: '/student/applications', icon: 'assignment', labelKey: 'shell.nav.myApplications' },
+          { path: '/student/internships', icon: 'business_center', labelKey: 'shell.nav.myInternships' },
         ],
       });
     }
 
     if (this.role === 'COMPANY') {
       sections.push({
-        heading: 'Company',
-        items: [{ path: '/company/offers', icon: 'add_business', label: 'My Offers' }],
+        heading: 'shell.nav.company',
+        items: [{ path: '/company/offers', icon: 'add_business', labelKey: 'shell.nav.myOffers' }],
       });
     }
 
     if (this.role === 'SUPERVISOR') {
       sections.push({
-        heading: 'Supervision',
+        heading: 'shell.nav.supervision',
         items: [
-          { path: '/supervisor/internships', icon: 'supervisor_account', label: 'Internships' },
+          { path: '/supervisor/internships', icon: 'supervisor_account', labelKey: 'shell.nav.internships' },
         ],
       });
     }
 
     if (this.role === 'ADMIN') {
       sections.push({
-        heading: 'Administration',
+        heading: 'shell.nav.administration',
         items: [
-          { path: '/admin/dashboard', icon: 'dashboard', label: 'Dashboard' },
-          { path: '/admin/users', icon: 'people', label: 'Users' },
-          { path: '/admin/applications', icon: 'description', label: 'Applications' },
-          { path: '/admin/internships', icon: 'business_center', label: 'Internships' },
+          { path: '/admin/dashboard', icon: 'dashboard', labelKey: 'shell.nav.dashboard' },
+          { path: '/admin/users', icon: 'people', labelKey: 'shell.nav.users' },
+          { path: '/admin/applications', icon: 'description', labelKey: 'shell.nav.applications' },
+          { path: '/admin/internships', icon: 'business_center', labelKey: 'shell.nav.internships' },
         ],
       });
     }

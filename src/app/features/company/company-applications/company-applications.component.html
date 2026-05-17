@@ -2,7 +2,7 @@
   <div class="page-header-left">
     <a class="back-link" routerLink="/company/offers">
       <mat-icon aria-hidden="true">arrow_back</mat-icon>
-      My Offers
+      {{ 'shell.nav.myOffers' | translate }}
     </a>
     <h1>Applications</h1>
     @if (!loading) {
@@ -36,7 +36,7 @@
 } @else if (applications.length === 0) {
   <div class="empty-state">
     <mat-icon aria-hidden="true">inbox</mat-icon>
-    <p class="empty-title">No applications yet</p>
+    <p class="empty-title">{{ 'student.applications.emptyTitle' | translate }}</p>
     <p class="empty-description">Applications submitted for this offer will appear here.</p>
   </div>
 } @else {
@@ -68,7 +68,7 @@
 
           @if (app.coverLetter) {
             <div class="section">
-              <strong>Cover Letter</strong>
+              <strong>{{ 'common.labels.coverLetter' | translate }}</strong>
               <pre class="cover-letter">{{ app.coverLetter }}</pre>
             </div>
           }
@@ -86,18 +86,18 @@
                 <button class="decision-btn accept-btn"
                         (click)="updateStatus(app, 'ACCEPTED')"
                         [disabled]="updatingStatus[app.id]"
-                        aria-label="Accept this application">
+                        aria-label="{{ 'common.actions.accept' | translate }} this application">
                   @if (updatingStatus[app.id]) { <mat-spinner diameter="16" /> }
                   @else { <mat-icon aria-hidden="true">check</mat-icon> }
-                  Accept
+                  {{ 'common.actions.accept' | translate }}
                 </button>
                 <button class="decision-btn reject-btn"
                         (click)="updateStatus(app, 'REJECTED')"
                         [disabled]="updatingStatus[app.id]"
-                        aria-label="Reject this application">
+                        aria-label="{{ 'common.actions.reject' | translate }} this application">
                   @if (updatingStatus[app.id]) { <mat-spinner diameter="16" /> }
                   @else { <mat-icon aria-hidden="true">close</mat-icon> }
-                  Reject
+                  {{ 'common.actions.reject' | translate }}
                 </button>
               </div>
             </div>
@@ -107,3 +107,5 @@
     }
   </mat-accordion>
 }
+
+

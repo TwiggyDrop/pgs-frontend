@@ -10,9 +10,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDividerModule } from '@angular/material/divider';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { RegisterRequest, Role } from '../../../core/models/auth.models';
 import { subscribeForView } from '../../../shared/utils/view-subscribe';
+import { LanguageSwitcherComponent } from '../../../shared/components/language-switcher/language-switcher.component';
 
 @Component({
   selector: 'app-register',
@@ -28,6 +30,8 @@ import { subscribeForView } from '../../../shared/utils/view-subscribe';
     MatIconModule,
     MatProgressSpinnerModule,
     MatDividerModule,
+    TranslatePipe,
+    LanguageSwitcherComponent,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
@@ -37,6 +41,7 @@ export class RegisterComponent {
   private auth = inject(AuthService);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
+  private translate = inject(TranslateService);
 
   form = this.fb.group({
     firstName: ['', Validators.required],
@@ -61,21 +66,21 @@ export class RegisterComponent {
   readonly roleOptions = [
     {
       value: 'STUDENT',
-      label: 'Student',
+      labelKey: 'common.roles.STUDENT',
       icon: 'person',
-      description: 'Find and apply to internships',
+      descriptionKey: 'auth.register.roles.studentDescription',
     },
     {
       value: 'COMPANY',
-      label: 'Company',
+      labelKey: 'common.roles.COMPANY',
       icon: 'business',
-      description: 'Post offers and hire interns',
+      descriptionKey: 'auth.register.roles.companyDescription',
     },
     {
       value: 'SUPERVISOR',
-      label: 'Supervisor',
+      labelKey: 'common.roles.SUPERVISOR',
       icon: 'supervisor_account',
-      description: 'Oversee and mentor interns',
+      descriptionKey: 'auth.register.roles.supervisorDescription',
     },
   ];
 
@@ -126,7 +131,7 @@ export class RegisterComponent {
           }
         },
         error: (err) => {
-          this.error = err.message || 'Registration failed. Please try again.';
+          this.error = err.message || this.translate.instant('auth.register.failed');
         },
       },
     );

@@ -8,11 +8,12 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AdminService } from '../../../core/services/admin.service';
 import { StatsResponse } from '../../../core/models/admin.models';
 import { subscribeForView } from '../../../shared/utils/view-subscribe';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [RouterLink, DecimalPipe, MatIconModule, MatProgressSpinnerModule],
+  imports: [TranslatePipe, RouterLink, DecimalPipe, MatIconModule, MatProgressSpinnerModule],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.scss',
 })
@@ -43,3 +44,4 @@ export class AdminDashboardComponent implements OnInit {
     );
   }
 }
+

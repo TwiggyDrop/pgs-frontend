@@ -6,22 +6,22 @@
       <div class="brand-mark">
         <mat-icon>school</mat-icon>
       </div>
-      <h2 class="brand-headline">Manage internships<br>with confidence.</h2>
+      <h2 class="brand-headline">{{ 'auth.shared.brandLoginTitle' | translate }}</h2>
       <p class="brand-sub">
-        Connect students, companies, and supervisors in one unified platform.
+        {{ 'auth.shared.brandLoginSubtitle' | translate }}
       </p>
       <ul class="brand-features" role="list">
         <li>
           <mat-icon>check_circle</mat-icon>
-          <span>Publish and manage internship offers</span>
+          <span>{{ 'auth.shared.featureOffers' | translate }}</span>
         </li>
         <li>
           <mat-icon>check_circle</mat-icon>
-          <span>Track applications end-to-end</span>
+          <span>{{ 'auth.shared.featureApplications' | translate }}</span>
         </li>
         <li>
           <mat-icon>check_circle</mat-icon>
-          <span>Supervise internships in real time</span>
+          <span>{{ 'auth.shared.featureSupervise' | translate }}</span>
         </li>
       </ul>
     </div>
@@ -34,12 +34,13 @@
 
       <!-- Header -->
       <div class="auth-header">
+        <app-language-switcher />
         <div class="auth-logo-mobile" aria-hidden="true">
           <mat-icon>school</mat-icon>
-          <span>PGS Platform</span>
+          <span>PGS {{ 'common.app.platform' | translate }}</span>
         </div>
-        <h1>Welcome back</h1>
-        <p class="auth-subtitle">Sign in to your account to continue.</p>
+        <h1>{{ 'auth.login.title' | translate }}</h1>
+        <p class="auth-subtitle">{{ 'auth.login.subtitle' | translate }}</p>
       </div>
 
       <!-- Error -->
@@ -55,7 +56,7 @@
 
         <div class="field-group">
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Email address</mat-label>
+            <mat-label>{{ 'auth.shared.email' | translate }}</mat-label>
             <input
               matInput
               type="email"
@@ -65,15 +66,15 @@
               [attr.aria-invalid]="form.get('email')?.invalid && form.get('email')?.touched" />
             <mat-icon matSuffix aria-hidden="true">alternate_email</mat-icon>
             @if (form.get('email')?.touched && form.get('email')?.hasError('required')) {
-              <mat-error>Email address is required</mat-error>
+              <mat-error>{{ 'auth.shared.emailRequired' | translate }}</mat-error>
             }
             @if (form.get('email')?.touched && form.get('email')?.hasError('email')) {
-              <mat-error>Enter a valid email address</mat-error>
+              <mat-error>{{ 'auth.shared.validEmail' | translate }}</mat-error>
             }
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Password</mat-label>
+            <mat-label>{{ 'auth.shared.password' | translate }}</mat-label>
             <input
               matInput
               [type]="hidePassword ? 'password' : 'text'"
@@ -85,11 +86,11 @@
               matSuffix
               type="button"
               (click)="hidePassword = !hidePassword"
-              [attr.aria-label]="hidePassword ? 'Show password' : 'Hide password'">
+              [attr.aria-label]="(hidePassword ? 'auth.shared.showPassword' : 'auth.shared.hidePassword') | translate">
               <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
             </button>
             @if (form.get('password')?.touched && form.get('password')?.hasError('required')) {
-              <mat-error>Password is required</mat-error>
+              <mat-error>{{ 'auth.shared.passwordRequired' | translate }}</mat-error>
             }
           </mat-form-field>
         </div>
@@ -99,12 +100,12 @@
           type="submit"
           [disabled]="loading || form.invalid"
           [class.loading]="loading"
-          aria-label="Sign in">
+          [attr.aria-label]="'common.actions.signIn' | translate">
           @if (loading) {
-            <mat-spinner diameter="18" aria-label="Signing in…" />
-            <span>Signing in…</span>
+            <mat-spinner diameter="18" [attr.aria-label]="'auth.login.loading' | translate" />
+            <span>{{ 'auth.login.loading' | translate }}</span>
           } @else {
-            <span>Sign In</span>
+            <span>{{ 'auth.login.submit' | translate }}</span>
             <mat-icon aria-hidden="true">arrow_forward</mat-icon>
           }
         </button>
@@ -112,10 +113,12 @@
 
       <!-- Footer -->
       <div class="auth-footer">
-        <span>Don't have an account?</span>
-        <a routerLink="/register" class="auth-link">Create one free</a>
+        <span>{{ 'auth.login.noAccount' | translate }}</span>
+        <a routerLink="/register" class="auth-link">{{ 'auth.login.createOne' | translate }}</a>
       </div>
 
     </div>
   </div>
 </div>
+
+

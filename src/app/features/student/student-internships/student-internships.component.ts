@@ -6,11 +6,12 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { InternshipService } from '../../../core/services/internship.service';
 import { InternshipResponse } from '../../../core/models/internship.models';
 import { subscribeForView } from '../../../shared/utils/view-subscribe';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-student-internships',
   standalone: true,
-  imports: [DatePipe, MatIconModule, MatProgressSpinnerModule],
+  imports: [TranslatePipe, DatePipe, MatIconModule, MatProgressSpinnerModule],
   templateUrl: './student-internships.component.html',
   styleUrl: './student-internships.component.scss',
 })
@@ -37,3 +38,4 @@ export class StudentInternshipsComponent implements OnInit {
     );
   }
 }
+

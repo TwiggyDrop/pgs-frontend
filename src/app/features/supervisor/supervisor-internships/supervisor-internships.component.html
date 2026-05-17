@@ -1,6 +1,6 @@
 <div class="page-header">
   <div class="page-header-left">
-    <h1>Supervised Internships</h1>
+    <h1>{{ 'supervisor.internships.title' | translate }}</h1>
     @if (!loading) {
       <p class="page-count">{{ internships.length }} {{ internships.length === 1 ? 'internship' : 'internships' }}</p>
     }
@@ -74,7 +74,7 @@
                     aria-label="Mark internship as completed">
               @if (updatingStatus[i.id]) { <mat-spinner diameter="16" /> }
               @else { <mat-icon aria-hidden="true">check_circle</mat-icon> }
-              Mark Completed
+              {{ 'common.actions.markCompleted' | translate }}
             </button>
             <button class="decision-btn interrupt-btn"
                     (click)="updateStatus(i, 'INTERRUPTED')"
@@ -82,7 +82,7 @@
                     aria-label="Mark internship as interrupted">
               @if (updatingStatus[i.id]) { <mat-spinner diameter="16" /> }
               @else { <mat-icon aria-hidden="true">cancel</mat-icon> }
-              Mark Interrupted
+              {{ 'common.actions.markInterrupted' | translate }}
             </button>
           </div>
         }
@@ -108,7 +108,7 @@
                 Saving…
               } @else {
                 <mat-icon aria-hidden="true">save</mat-icon>
-                Save Notes
+                {{ 'common.actions.saveNotes' | translate }}
               }
             </button>
           </div>
@@ -118,3 +118,5 @@
     }
   </div>
 }
+
+

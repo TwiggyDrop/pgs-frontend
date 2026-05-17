@@ -1,6 +1,6 @@
 <div class="page-header">
   <div class="page-header-left">
-    <h1>My Internships</h1>
+    <h1>{{ 'shell.nav.myInternships' | translate }}</h1>
     @if (!loading) {
       <p class="page-count">{{ internships.length }} {{ internships.length === 1 ? 'internship' : 'internships' }}</p>
     }
@@ -33,7 +33,7 @@
 } @else if (internships.length === 0) {
   <div class="empty-state">
     <mat-icon aria-hidden="true">business_center</mat-icon>
-    <p class="empty-title">No internships yet</p>
+    <p class="empty-title">{{ 'student.internships.emptyTitle' | translate }}</p>
     <p class="empty-description">Once your application is accepted, your internship will appear here.</p>
   </div>
 } @else {
@@ -80,3 +80,5 @@
     }
   </div>
 }
+
+

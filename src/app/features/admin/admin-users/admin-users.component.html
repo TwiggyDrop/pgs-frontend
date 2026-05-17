@@ -33,7 +33,7 @@
 } @else if (users.length === 0) {
   <div class="empty-state">
     <mat-icon aria-hidden="true">people_outline</mat-icon>
-    <p class="empty-title">No users found</p>
+    <p class="empty-title">{{ 'admin.users.emptyTitle' | translate }}</p>
     <p class="empty-description">No users match the current filter.</p>
   </div>
 } @else {
@@ -78,7 +78,7 @@
       </ng-container>
 
       <ng-container matColumnDef="createdAt">
-        <th mat-header-cell *matHeaderCellDef>Joined</th>
+        <th mat-header-cell *matHeaderCellDef>{{ 'common.labels.joined' | translate }}</th>
         <td mat-cell *matCellDef="let u" class="date-cell">{{ u.createdAt | date:'MMM d, y' }}</td>
       </ng-container>
 
@@ -109,3 +109,5 @@
     </table>
   </div>
 }
+
+

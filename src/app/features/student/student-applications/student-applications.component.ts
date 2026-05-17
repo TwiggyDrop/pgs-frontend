@@ -7,11 +7,12 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ApplicationService } from '../../../core/services/application.service';
 import { ApplicationResponse } from '../../../core/models/application.models';
 import { subscribeForView } from '../../../shared/utils/view-subscribe';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-student-applications',
   standalone: true,
-  imports: [RouterLink, DatePipe, SlicePipe, MatIconModule, MatProgressSpinnerModule],
+  imports: [TranslatePipe, RouterLink, DatePipe, SlicePipe, MatIconModule, MatProgressSpinnerModule],
   templateUrl: './student-applications.component.html',
   styleUrl: './student-applications.component.scss',
 })
@@ -38,3 +39,4 @@ export class StudentApplicationsComponent implements OnInit {
     );
   }
 }
+

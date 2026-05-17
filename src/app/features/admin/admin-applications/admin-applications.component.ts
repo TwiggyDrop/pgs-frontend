@@ -12,11 +12,12 @@ import { AdminService } from '../../../core/services/admin.service';
 import { ApplicationResponse, ApplicationStatus } from '../../../core/models/application.models';
 import { UserResponse } from '../../../core/models/auth.models';
 import { subscribeForView } from '../../../shared/utils/view-subscribe';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-admin-applications',
   standalone: true,
-  imports: [DatePipe, FormsModule, MatIconModule, MatProgressSpinnerModule, MatExpansionModule],
+  imports: [TranslatePipe, DatePipe, FormsModule, MatIconModule, MatProgressSpinnerModule, MatExpansionModule],
   templateUrl: './admin-applications.component.html',
   styleUrl: './admin-applications.component.scss',
 })
@@ -101,3 +102,4 @@ export class AdminApplicationsComponent implements OnInit {
     );
   }
 }
+

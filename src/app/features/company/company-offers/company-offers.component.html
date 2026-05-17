@@ -1,6 +1,6 @@
 <div class="page-header">
   <div class="page-header-left">
-    <h1>My Offers</h1>
+    <h1>{{ 'shell.nav.myOffers' | translate }}</h1>
     @if (!loading) {
       <p class="page-count">{{ offers.length }} {{ offers.length === 1 ? 'offer' : 'offers' }}</p>
     }
@@ -8,7 +8,7 @@
   <div class="page-header-actions">
     <a class="new-offer-btn" routerLink="/company/offers/new" aria-label="Post a new internship offer">
       <mat-icon aria-hidden="true">add</mat-icon>
-      New Offer
+      {{ 'company.offers.new' | translate }}
     </a>
   </div>
 </div>
@@ -25,7 +25,7 @@
 } @else if (offers.length === 0) {
   <div class="empty-state">
     <mat-icon aria-hidden="true">work_off</mat-icon>
-    <p class="empty-title">No offers yet</p>
+    <p class="empty-title">{{ 'company.offers.emptyTitle' | translate }}</p>
     <p class="empty-description">Post your first internship offer to start receiving applications.</p>
     <a class="new-offer-btn" routerLink="/company/offers/new">Post your first offer</a>
   </div>
@@ -51,12 +51,12 @@
       </ng-container>
 
       <ng-container matColumnDef="startDate">
-        <th mat-header-cell *matHeaderCellDef>Start</th>
+        <th mat-header-cell *matHeaderCellDef>{{ 'company.offers.start' | translate }}</th>
         <td mat-cell *matCellDef="let o" class="date-cell">{{ o.startDate | date:'MMM d, y' }}</td>
       </ng-container>
 
       <ng-container matColumnDef="endDate">
-        <th mat-header-cell *matHeaderCellDef>End</th>
+        <th mat-header-cell *matHeaderCellDef>{{ 'company.offers.end' | translate }}</th>
         <td mat-cell *matCellDef="let o" class="date-cell">{{ o.endDate | date:'MMM d, y' }}</td>
       </ng-container>
 
@@ -106,3 +106,5 @@
     </table>
   </div>
 }
+
+

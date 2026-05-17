@@ -1,6 +1,6 @@
 <div class="page-header">
   <div class="page-header-left">
-    <h1>My Applications</h1>
+    <h1>{{ 'shell.nav.myApplications' | translate }}</h1>
     @if (!loading) {
       <p class="page-count">{{ applications.length }} {{ applications.length === 1 ? 'application' : 'applications' }}</p>
     }
@@ -8,7 +8,7 @@
   <div class="page-header-actions">
     <a class="header-action-btn" routerLink="/offers" aria-label="Browse internship offers">
       <mat-icon aria-hidden="true">search</mat-icon>
-      Browse Offers
+      {{ 'shell.nav.browseOffers' | translate }}
     </a>
   </div>
 </div>
@@ -36,9 +36,9 @@
 } @else if (applications.length === 0) {
   <div class="empty-state">
     <mat-icon aria-hidden="true">assignment</mat-icon>
-    <p class="empty-title">No applications yet</p>
-    <p class="empty-description">Start exploring internship offers and submit your first application.</p>
-    <a class="empty-action-btn" routerLink="/offers">Browse Offers</a>
+    <p class="empty-title">{{ 'student.applications.emptyTitle' | translate }}</p>
+    <p class="empty-description">{{ 'company.offers.start' | translate }} exploring internship offers and submit your first application.</p>
+    <a class="empty-action-btn" routerLink="/offers">{{ 'shell.nav.browseOffers' | translate }}</a>
   </div>
 } @else {
   <div class="item-list">
@@ -86,3 +86,5 @@
     }
   </div>
 }
+
+

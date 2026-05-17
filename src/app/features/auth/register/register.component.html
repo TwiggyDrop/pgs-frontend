@@ -6,19 +6,19 @@
       <div class="brand-mark">
         <mat-icon>school</mat-icon>
       </div>
-      <h2 class="brand-headline">Your internship<br>journey starts here.</h2>
+      <h2 class="brand-headline">{{ 'auth.shared.brandRegisterTitle' | translate }}</h2>
       <p class="brand-sub">
-        Join thousands of students, companies, and supervisors coordinating internships on PGS Platform.
+        {{ 'auth.shared.brandRegisterSubtitle' | translate }}
       </p>
       <div class="brand-roles">
         <div class="role-pill student">
-          <mat-icon>person</mat-icon> Student
+          <mat-icon>person</mat-icon> {{ 'common.roles.STUDENT' | translate }}
         </div>
         <div class="role-pill company">
-          <mat-icon>business</mat-icon> Company
+          <mat-icon>business</mat-icon> {{ 'common.roles.COMPANY' | translate }}
         </div>
         <div class="role-pill supervisor">
-          <mat-icon>supervisor_account</mat-icon> Supervisor
+          <mat-icon>supervisor_account</mat-icon> {{ 'common.roles.SUPERVISOR' | translate }}
         </div>
       </div>
     </div>
@@ -31,12 +31,13 @@
 
       <!-- Header -->
       <div class="auth-header">
+        <app-language-switcher />
         <div class="auth-logo-mobile" aria-hidden="true">
           <mat-icon>school</mat-icon>
-          <span>PGS Platform</span>
+          <span>PGS {{ 'common.app.platform' | translate }}</span>
         </div>
-        <h1>Create your account</h1>
-        <p class="auth-subtitle">Get started in under two minutes.</p>
+        <h1>{{ 'auth.register.title' | translate }}</h1>
+        <p class="auth-subtitle">{{ 'auth.register.subtitle' | translate }}</p>
       </div>
 
       <!-- Error -->
@@ -53,7 +54,7 @@
         <div class="form-group">
           <div class="form-row-2">
             <mat-form-field appearance="outline">
-              <mat-label>First name</mat-label>
+              <mat-label>{{ 'auth.register.firstName' | translate }}</mat-label>
               <input matInput formControlName="firstName" autocomplete="given-name" />
               @if (form.get('firstName')?.touched && form.get('firstName')?.hasError('required')) {
                 <mat-error>Required</mat-error>
@@ -61,7 +62,7 @@
             </mat-form-field>
 
             <mat-form-field appearance="outline">
-              <mat-label>Last name</mat-label>
+              <mat-label>{{ 'auth.register.lastName' | translate }}</mat-label>
               <input matInput formControlName="lastName" autocomplete="family-name" />
               @if (form.get('lastName')?.touched && form.get('lastName')?.hasError('required')) {
                 <mat-error>Required</mat-error>
@@ -70,37 +71,37 @@
           </div>
 
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Email address</mat-label>
+            <mat-label>{{ 'auth.shared.email' | translate }}</mat-label>
             <input matInput type="email" formControlName="email" autocomplete="email" inputmode="email" />
             <mat-icon matSuffix aria-hidden="true">alternate_email</mat-icon>
             @if (form.get('email')?.touched && form.get('email')?.hasError('required')) {
-              <mat-error>Email is required</mat-error>
+              <mat-error>{{ 'auth.shared.emailShortRequired' | translate }}</mat-error>
             }
             @if (form.get('email')?.touched && form.get('email')?.hasError('email')) {
-              <mat-error>Enter a valid email</mat-error>
+              <mat-error>{{ 'auth.shared.validEmailShort' | translate }}</mat-error>
             }
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Password</mat-label>
+            <mat-label>{{ 'auth.shared.password' | translate }}</mat-label>
             <input matInput [type]="hidePassword ? 'password' : 'text'"
                    formControlName="password" autocomplete="new-password" />
             <button mat-icon-button matSuffix type="button"
                     (click)="hidePassword = !hidePassword"
-                    [attr.aria-label]="hidePassword ? 'Show password' : 'Hide password'">
+                    [attr.aria-label]="(hidePassword ? 'auth.shared.showPassword' : 'auth.shared.hidePassword') | translate">
               <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
             </button>
-            <mat-hint>Minimum 6 characters</mat-hint>
+            <mat-hint>{{ 'auth.shared.minimumPassword' | translate }}</mat-hint>
             @if (form.get('password')?.touched && form.get('password')?.hasError('minlength')) {
-              <mat-error>Minimum 6 characters required</mat-error>
+              <mat-error>{{ 'auth.shared.minimumPasswordRequired' | translate }}</mat-error>
             }
           </mat-form-field>
         </div>
 
         <!-- ── Role selector ──────────────────────── -->
         <div class="role-section">
-          <p class="role-section-label">I am joining as…</p>
-          <div class="role-selector" role="radiogroup" aria-label="Select your role">
+          <p class="role-section-label">{{ 'auth.register.joiningAs' | translate }}</p>
+          <div class="role-selector" role="radiogroup" [attr.aria-label]="'auth.register.selectRole' | translate">
             @for (r of roleOptions; track r.value) {
               <button
                 type="button"
@@ -108,22 +109,22 @@
                 [class.selected]="role === r.value"
                 (click)="form.get('role')?.setValue(r.value)"
                 [attr.aria-pressed]="role === r.value"
-                [attr.aria-label]="r.label">
+                [attr.aria-label]="r.labelKey | translate">
                 <mat-icon aria-hidden="true">{{ r.icon }}</mat-icon>
-                <span class="role-card-label">{{ r.label }}</span>
-                <span class="role-card-desc">{{ r.description }}</span>
+                <span class="role-card-label">{{ r.labelKey | translate }}</span>
+                <span class="role-card-desc">{{ r.descriptionKey | translate }}</span>
               </button>
             }
           </div>
           @if (form.get('role')?.touched && form.get('role')?.hasError('required')) {
-            <p class="role-error" role="alert">Please select a role to continue</p>
+            <p class="role-error" role="alert">{{ 'auth.register.selectRoleError' | translate }}</p>
           }
         </div>
 
         <!-- ── Contextual details (progressive disclosure) ── -->
         @if (role === 'STUDENT') {
-          <div class="context-section" role="region" aria-label="Student details">
-            <div class="section-divider-label">Student Details</div>
+          <div class="context-section" role="region" [attr.aria-label]="'common.labels.studentDetails' | translate">
+            <div class="section-divider-label">{{ 'common.labels.studentDetails' | translate }}</div>
             <div class="form-group">
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Student number</mat-label>
@@ -142,8 +143,8 @@
         }
 
         @if (role === 'COMPANY') {
-          <div class="context-section" role="region" aria-label="Company details">
-            <div class="section-divider-label">Company Details</div>
+          <div class="context-section" role="region" [attr.aria-label]="'common.labels.companyDetails' | translate">
+            <div class="section-divider-label">{{ 'common.labels.companyDetails' | translate }}</div>
             <div class="form-group">
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Company name</mat-label>
@@ -162,8 +163,8 @@
         }
 
         @if (role === 'SUPERVISOR') {
-          <div class="context-section" role="region" aria-label="Supervisor details">
-            <div class="section-divider-label">Supervisor Details</div>
+          <div class="context-section" role="region" [attr.aria-label]="'common.labels.supervisorDetails' | translate">
+            <div class="section-divider-label">{{ 'common.labels.supervisorDetails' | translate }}</div>
             <div class="form-group">
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Department</mat-label>
@@ -183,12 +184,12 @@
           type="submit"
           [disabled]="loading || form.invalid"
           [class.loading]="loading"
-          aria-label="Create account">
+          [attr.aria-label]="'auth.register.submit' | translate">
           @if (loading) {
-            <mat-spinner diameter="18" aria-label="Creating account…" />
-            <span>Creating account…</span>
+            <mat-spinner diameter="18" [attr.aria-label]="'auth.register.loading' | translate" />
+            <span>{{ 'auth.register.loading' | translate }}</span>
           } @else {
-            <span>Create Account</span>
+            <span>{{ 'auth.register.submit' | translate }}</span>
             <mat-icon aria-hidden="true">arrow_forward</mat-icon>
           }
         </button>
@@ -196,10 +197,13 @@
 
       <!-- Footer -->
       <div class="auth-footer">
-        <span>Already have an account?</span>
-        <a routerLink="/login" class="auth-link">Sign in</a>
+        <span>{{ 'auth.register.hasAccount' | translate }}</span>
+        <a routerLink="/login" class="auth-link">{{ 'auth.register.signIn' | translate }}</a>
       </div>
 
     </div>
   </div>
 </div>
+
+
+

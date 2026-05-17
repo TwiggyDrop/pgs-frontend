@@ -9,11 +9,12 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { ApplicationService } from '../../../core/services/application.service';
 import { ApplicationResponse, ApplicationStatus } from '../../../core/models/application.models';
 import { subscribeForView } from '../../../shared/utils/view-subscribe';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-company-applications',
   standalone: true,
-  imports: [RouterLink, DatePipe, MatIconModule, MatProgressSpinnerModule, MatExpansionModule],
+  imports: [TranslatePipe, RouterLink, DatePipe, MatIconModule, MatProgressSpinnerModule, MatExpansionModule],
   templateUrl: './company-applications.component.html',
   styleUrl: './company-applications.component.scss',
 })
@@ -76,3 +77,4 @@ export class CompanyApplicationsComponent implements OnInit {
     );
   }
 }
+

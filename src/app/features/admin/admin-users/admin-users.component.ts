@@ -11,11 +11,12 @@ import { AdminService } from '../../../core/services/admin.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { UserResponse, Role } from '../../../core/models/auth.models';
 import { subscribeForView } from '../../../shared/utils/view-subscribe';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-admin-users',
   standalone: true,
-  imports: [
+  imports: [TranslatePipe, 
     DatePipe,
     FormsModule,
     MatTableModule,
@@ -102,3 +103,4 @@ export class AdminUsersComponent implements OnInit {
     );
   }
 }
+

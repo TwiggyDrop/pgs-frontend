@@ -19,7 +19,7 @@
 } @else if (applications.length === 0) {
   <div class="empty-state">
     <mat-icon aria-hidden="true">description</mat-icon>
-    <p class="empty-title">No applications yet</p>
+    <p class="empty-title">{{ 'student.applications.emptyTitle' | translate }}</p>
     <p class="empty-description">Student applications will appear here once offers are posted.</p>
   </div>
 } @else {
@@ -51,7 +51,7 @@
 
           @if (app.coverLetter) {
             <div class="section">
-              <strong>Cover Letter</strong>
+              <strong>{{ 'common.labels.coverLetter' | translate }}</strong>
               <pre class="cover-letter">{{ app.coverLetter }}</pre>
             </div>
           }
@@ -72,18 +72,18 @@
                 <button class="decision-btn accept-btn"
                         (click)="updateStatus(app, 'ACCEPTED')"
                         [disabled]="updatingStatus[app.id]"
-                        aria-label="Accept application">
+                        aria-label="{{ 'common.actions.accept' | translate }} application">
                   @if (updatingStatus[app.id]) { <mat-spinner diameter="16" /> }
                   @else { <mat-icon aria-hidden="true">check</mat-icon> }
-                  Accept
+                  {{ 'common.actions.accept' | translate }}
                 </button>
                 <button class="decision-btn reject-btn"
                         (click)="updateStatus(app, 'REJECTED')"
                         [disabled]="updatingStatus[app.id]"
-                        aria-label="Reject application">
+                        aria-label="{{ 'common.actions.reject' | translate }} application">
                   @if (updatingStatus[app.id]) { <mat-spinner diameter="16" /> }
                   @else { <mat-icon aria-hidden="true">close</mat-icon> }
-                  Reject
+                  {{ 'common.actions.reject' | translate }}
                 </button>
               </div>
             </div>
@@ -92,7 +92,7 @@
           @if (app.status === 'ACCEPTED') {
             <div class="section">
               <div class="create-internship">
-                <strong>Create Internship</strong>
+                <strong>{{ 'common.actions.createInternship' | translate }}</strong>
                 <div class="internship-row">
                   <select [(ngModel)]="selectedSupervisor[app.id]" class="supervisor-select"
                           [attr.aria-label]="'Select supervisor for ' + app.studentName">
@@ -110,7 +110,7 @@
                       Creating…
                     } @else {
                       <mat-icon aria-hidden="true">add_circle_outline</mat-icon>
-                      Create Internship
+                      {{ 'common.actions.createInternship' | translate }}
                     }
                   </button>
                 </div>
@@ -128,3 +128,5 @@
     }
   </mat-accordion>
 }
+
+

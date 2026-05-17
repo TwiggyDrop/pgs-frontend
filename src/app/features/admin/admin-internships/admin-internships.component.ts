@@ -10,11 +10,12 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { InternshipService } from '../../../core/services/internship.service';
 import { InternshipResponse, InternshipStatus } from '../../../core/models/internship.models';
 import { subscribeForView } from '../../../shared/utils/view-subscribe';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-admin-internships',
   standalone: true,
-  imports: [DatePipe, MatTableModule, MatIconModule, MatProgressSpinnerModule, MatTooltipModule],
+  imports: [TranslatePipe, DatePipe, MatTableModule, MatIconModule, MatProgressSpinnerModule, MatTooltipModule],
   templateUrl: './admin-internships.component.html',
   styleUrl: './admin-internships.component.scss',
 })
@@ -63,3 +64,4 @@ export class AdminInternshipsComponent implements OnInit {
     );
   }
 }
+

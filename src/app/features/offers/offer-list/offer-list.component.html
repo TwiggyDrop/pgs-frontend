@@ -1,6 +1,6 @@
 <div class="page-header">
   <div class="page-header-left">
-    <h1>Internship Offers</h1>
+    <h1>{{ 'offers.list.title' | translate }}</h1>
     @if (!loading && filtered.length > 0) {
       <p class="page-count">{{ filtered.length }} {{ filtered.length === 1 ? 'offer' : 'offers' }} available</p>
     }
@@ -61,7 +61,7 @@
 } @else if (filtered.length === 0) {
   <div class="empty-state">
     <mat-icon aria-hidden="true">{{ searchQuery ? 'search_off' : 'work_off' }}</mat-icon>
-    <p class="empty-title">{{ searchQuery ? 'No results found' : 'No offers available' }}</p>
+    <p class="empty-title">{{ (searchQuery ? 'offers.list.noResults' : 'offers.list.noOffers') | translate }}</p>
     <p class="empty-description">
       {{ searchQuery ? 'Try different keywords or clear the search.' : 'Check back later for new internship opportunities.' }}
     </p>
@@ -131,3 +131,5 @@
     }
   </div>
 }
+
+

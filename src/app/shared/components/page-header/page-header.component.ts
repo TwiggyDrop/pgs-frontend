@@ -3,7 +3,6 @@ import { Component, Input } from '@angular/core';
 @Component({
   selector: 'app-page-header',
   standalone: true,
-  imports: [],
   template: `
     <div class="page-header">
       <div class="page-header-left">
@@ -28,3 +27,4 @@ export class PageHeaderComponent {
   @Input() singular = 'item';
   @Input() plural = 'items';
 }
+

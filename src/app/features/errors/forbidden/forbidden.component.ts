@@ -2,17 +2,18 @@ import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-forbidden',
   standalone: true,
-  imports: [RouterLink, MatButtonModule, MatIconModule],
+  imports: [TranslatePipe, RouterLink, MatButtonModule, MatIconModule],
   template: `
     <div class="forbidden">
       <mat-icon>block</mat-icon>
-      <h1>403 — Access Denied</h1>
-      <p>You don't have permission to view this page.</p>
-      <a mat-flat-button routerLink="/offers">Go to Offers</a>
+      <h1>{{ 'forbidden.title' | translate }}</h1>
+      <p>{{ 'forbidden.message' | translate }}</p>
+      <a mat-flat-button routerLink="/offers">{{ 'forbidden.goToOffers' | translate }}</a>
     </div>
   `,
   styles: [`
@@ -29,6 +30,6 @@ import { MatIconModule } from '@angular/material/icon';
       h1 { margin: 0; font-size: 2rem; }
       p { color: rgba(0,0,0,0.6); margin: 0; }
     }
-  `]
+  `],
 })
 export class ForbiddenComponent {}

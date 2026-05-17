@@ -11,11 +11,12 @@ import { OfferService } from '../../../core/services/offer.service';
 import { OfferResponse } from '../../../core/models/offer.models';
 import { ConfirmDialogService } from '../../../shared/components/confirm-dialog/confirm-dialog.service';
 import { subscribeForView } from '../../../shared/utils/view-subscribe';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-company-offers',
   standalone: true,
-  imports: [
+  imports: [TranslatePipe, 
     RouterLink,
     DatePipe,
     MatTableModule,
@@ -112,3 +113,4 @@ export class CompanyOffersComponent implements OnInit {
     );
   }
 }
+

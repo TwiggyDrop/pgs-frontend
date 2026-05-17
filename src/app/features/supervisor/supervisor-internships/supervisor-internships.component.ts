@@ -8,11 +8,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { InternshipService } from '../../../core/services/internship.service';
 import { InternshipResponse, InternshipStatus } from '../../../core/models/internship.models';
 import { subscribeForView } from '../../../shared/utils/view-subscribe';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-supervisor-internships',
   standalone: true,
-  imports: [DatePipe, FormsModule, MatIconModule, MatProgressSpinnerModule],
+  imports: [TranslatePipe, DatePipe, FormsModule, MatIconModule, MatProgressSpinnerModule],
   templateUrl: './supervisor-internships.component.html',
   styleUrl: './supervisor-internships.component.scss',
 })
@@ -87,3 +88,4 @@ export class SupervisorInternshipsComponent implements OnInit {
     );
   }
 }
+

@@ -2,7 +2,7 @@
   <div class="page-header-left">
     <a class="back-link" routerLink="/company/offers">
       <mat-icon aria-hidden="true">arrow_back</mat-icon>
-      My Offers
+      {{ 'shell.nav.myOffers' | translate }}
     </a>
     <h1>{{ isEdit ? 'Edit Offer' : 'New Internship Offer' }}</h1>
   </div>
@@ -72,7 +72,7 @@
 
           <div class="form-row-3">
             <mat-form-field appearance="outline">
-              <mat-label>Start Date</mat-label>
+              <mat-label>{{ 'company.offers.start' | translate }} Date</mat-label>
               <input matInput formControlName="startDate" type="date" />
               @if (form.get('startDate')?.touched && form.get('startDate')?.hasError('required')) {
                 <mat-error>Required</mat-error>
@@ -80,7 +80,7 @@
             </mat-form-field>
 
             <mat-form-field appearance="outline">
-              <mat-label>End Date</mat-label>
+              <mat-label>{{ 'company.offers.end' | translate }} Date</mat-label>
               <input matInput formControlName="endDate" type="date" />
               @if (form.get('endDate')?.touched && form.get('endDate')?.hasError('required')) {
                 <mat-error>Required</mat-error>
@@ -97,7 +97,7 @@
 
       <!-- Actions -->
       <div class="form-actions">
-        <a class="cancel-btn" routerLink="/company/offers">Cancel</a>
+        <a class="cancel-btn" routerLink="/company/offers">{{ 'common.actions.cancel' | translate }}</a>
         <button class="submit-btn" type="submit" [disabled]="saving || form.invalid"
                 [attr.aria-label]="isEdit ? 'Save changes' : 'Post offer'">
           @if (saving) {
@@ -113,3 +113,5 @@
     </form>
   </div>
 }
+
+

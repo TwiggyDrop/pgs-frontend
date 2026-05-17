@@ -65,15 +65,15 @@
         </div>
       </div>
 
-      <!-- Dates row -->
+      <!-- {{ 'common.labels.dates' | translate }} row -->
       <div class="dates-row">
         <div class="date-item">
-          <span class="date-label">Start Date</span>
+          <span class="date-label">{{ 'company.offers.start' | translate }} Date</span>
           <span class="date-value">{{ offer.startDate | date:'MMMM d, y' }}</span>
         </div>
         <div class="date-divider" aria-hidden="true"></div>
         <div class="date-item">
-          <span class="date-label">End Date</span>
+          <span class="date-label">{{ 'company.offers.end' | translate }} Date</span>
           <span class="date-value">{{ offer.endDate | date:'MMMM d, y' }}</span>
         </div>
       </div>
@@ -133,7 +133,7 @@
               <p class="apply-card-note">Submit your application to {{ offer.companyName }}.</p>
               <form [formGroup]="coverLetterForm" (ngSubmit)="apply()">
                 <div class="field-group">
-                  <label class="field-label" for="cover-letter">Cover Letter <span class="optional">(optional)</span></label>
+                  <label class="field-label" for="cover-letter">{{ 'common.labels.coverLetter' | translate }} <span class="optional">(optional)</span></label>
                   <textarea
                     id="cover-letter"
                     class="cover-textarea"
@@ -190,3 +190,5 @@
     </aside>
   </div>
 }
+
+

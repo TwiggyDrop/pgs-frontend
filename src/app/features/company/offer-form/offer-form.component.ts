@@ -10,11 +10,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { OfferService } from '../../../core/services/offer.service';
 import { CreateOfferRequest } from '../../../core/models/offer.models';
 import { subscribeForView } from '../../../shared/utils/view-subscribe';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-offer-form',
   standalone: true,
-  imports: [
+  imports: [TranslatePipe, 
     RouterLink,
     ReactiveFormsModule,
     MatFormFieldModule,
@@ -116,3 +117,4 @@ export class OfferFormComponent implements OnInit {
     });
   }
 }
+

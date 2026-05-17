@@ -21,3 +21,4 @@ export class EmptyStateComponent {
   @Input() title = 'Nothing here yet';
   @Input() description?: string;
 }
+

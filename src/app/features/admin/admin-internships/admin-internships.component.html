@@ -1,6 +1,6 @@
 <div class="page-header">
   <div class="page-header-left">
-    <h1>All Internships</h1>
+    <h1>{{ 'admin.internships.title' | translate }}</h1>
     @if (!loading) {
       <p class="page-count">{{ internships.length }} {{ internships.length === 1 ? 'internship' : 'internships' }}</p>
     }
@@ -19,7 +19,7 @@
 } @else if (internships.length === 0) {
   <div class="empty-state">
     <mat-icon aria-hidden="true">business_center</mat-icon>
-    <p class="empty-title">No internships yet</p>
+    <p class="empty-title">{{ 'student.internships.emptyTitle' | translate }}</p>
     <p class="empty-description">Internships are created when an application is accepted.</p>
   </div>
 } @else {
@@ -57,7 +57,7 @@
       </ng-container>
 
       <ng-container matColumnDef="dates">
-        <th mat-header-cell *matHeaderCellDef>Dates</th>
+        <th mat-header-cell *matHeaderCellDef>{{ 'common.labels.dates' | translate }}</th>
         <td mat-cell *matCellDef="let i" class="date-cell">
           @if (i.startDate) {
             {{ i.startDate | date:'MMM d, y' }}{{ i.endDate ? ' – ' + (i.endDate | date:'MMM d, y') : '' }}
@@ -71,7 +71,7 @@
           @if (i.status === 'ONGOING') {
             <div class="actions-cell">
               <button class="action-icon-btn"
-                      matTooltip="Mark Completed" matTooltipPosition="above"
+                      matTooltip="{{ 'common.actions.markCompleted' | translate }}" matTooltipPosition="above"
                       (click)="updateStatus(i, 'COMPLETED')"
                       [disabled]="updatingStatus[i.id]"
                       aria-label="Mark internship as completed">
@@ -79,7 +79,7 @@
                 @else { <mat-icon aria-hidden="true">check_circle</mat-icon> }
               </button>
               <button class="action-icon-btn danger"
-                      matTooltip="Mark Interrupted" matTooltipPosition="above"
+                      matTooltip="{{ 'common.actions.markInterrupted' | translate }}" matTooltipPosition="above"
                       (click)="updateStatus(i, 'INTERRUPTED')"
                       [disabled]="updatingStatus[i.id]"
                       aria-label="Mark internship as interrupted">
@@ -96,3 +96,5 @@
     </table>
   </div>
 }
+
+
